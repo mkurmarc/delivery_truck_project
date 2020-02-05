@@ -1,5 +1,5 @@
 # Marc
-class AlgoHashTable:
+class HashTable:
 
     def __init__(self, size):
         self.size = size
@@ -54,31 +54,30 @@ class Map:
 ################################ Program Script Below ################################ transfer to main later
 
 # creates hash table
-hash_table = AlgoHashTable(100)
+hash_table = HashTable(100)
 map_matrix = []
 
 # this reads file line by line and inputs it into the hash table with set_val method
 with open("package_file.txt") as f:
     for line in f:
+        line = line.strip('\n')
         key, street_address, city, state, zip_code, delivery_deadline, weight, special_note = line.split(",")
         delivery_status = 'hub'
-        if special_note.endswith('\n'):
-            special_note = special_note.replace('\n','')
+        # if special_note.endswith('\n'):
+        #     special_note = special_note.replace('\n','')
         value = {'delivery_address':street_address, 'city':city,
                  'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
         hash_table.set_val(key, value)
 
 # print(hash_table.get_val('1'))
-# print(hash_table)
+print(hash_table)
 
+# this reads distance file line by line and creates a map matrix
 with open("wgups_distance_table.txt") as f:
     for line in f:
         line = line.strip('\n')
         row = line.split(" ")
         map_matrix.append(row)
 
-
-
-
-print(map_matrix)
+# print(map_matrix)
