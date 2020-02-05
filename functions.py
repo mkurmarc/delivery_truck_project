@@ -39,17 +39,6 @@ class HashTable:
     def __str__(self):
         return "".join(str(item) for item in self.hash_table)
 
-class Map:
-
-    def open_package_file(self, file):
-        pass
-
-    def open_distance_file(self, file):
-        pass
-
-    def print_map(self, map):
-        pass
-
 
 ################################ Program Script Below ################################ transfer to main later
 
@@ -63,8 +52,6 @@ with open("package_file.txt") as f:
         line = line.strip('\n')
         key, street_address, city, state, zip_code, delivery_deadline, weight, special_note = line.split(",")
         delivery_status = 'hub'
-        # if special_note.endswith('\n'):
-        #     special_note = special_note.replace('\n','')
         value = {'delivery_address':street_address, 'city':city,
                  'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
