@@ -39,10 +39,23 @@ class AlgoHashTable:
     def __str__(self):
         return "".join(str(item) for item in self.hash_table)
 
-################################ Program Script Below ################################
+class Map:
+
+    def open_package_file(self, file):
+        pass
+
+    def open_distance_file(self, file):
+        pass
+
+    def print_map(self, map):
+        pass
+
+
+################################ Program Script Below ################################ transfer to main later
 
 # creates hash table
 hash_table = AlgoHashTable(100)
+map_matrix = []
 
 # this reads file line by line and inputs it into the hash table with set_val method
 with open("package_file.txt") as f:
@@ -57,4 +70,13 @@ with open("package_file.txt") as f:
         hash_table.set_val(key, value)
 
 print(hash_table.get_val('1'))
-#print(hash_table)
+print(hash_table)
+
+with open("wgups_distance_table.txt") as f:
+    for line in f:
+        row = line.split("\n")
+        map_matrix.append(row)
+
+
+
+print(map_matrix)
