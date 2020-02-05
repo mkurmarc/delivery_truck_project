@@ -69,13 +69,15 @@ with open("package_file.txt") as f:
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
         hash_table.set_val(key, value)
 
-print(hash_table.get_val('1'))
-print(hash_table)
+# print(hash_table.get_val('1'))
+# print(hash_table)
 
 with open("wgups_distance_table.txt") as f:
     for line in f:
-        row = line.split("\n")
+        line = line.strip('\n')
+        row = line.split(" ")
         map_matrix.append(row)
+
 
 
 
