@@ -40,13 +40,36 @@ class HashTable:
         return "".join(str(item) for item in self.hash_table)
 
 
+class AddressDict:
+
+    def __init__(self, size):
+         self.size = size
+         self.address_dict = self.create_dict()
+
+    def create_dict(self):
+        return ({} for _ in range(self.size))
+
+    def __str__(self):
+        return "".join(str(item) for item in self.address_dict)
+
+    def add_to_dict(self, key, value):
+
+
+
+
+
 ################################ Program Script Below ################################ transfer to main later
 
 # creates hash table
 hash_table = HashTable(100)
+
+# creates empty map matrix to be use for distances between addresses
 map_matrix = []
 
-# this reads file line by line and inputs it into the hash table with set_val method
+# creates empty address dictionary that will be used to map an address to its corresponding index to the list in the map matrix
+address_dictionary = AddressDict(40)
+
+# this reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method
 with open("package_file.txt") as f:
     for line in f:
         line = line.strip('\n')
@@ -57,14 +80,15 @@ with open("package_file.txt") as f:
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
         hash_table.set_val(key, value)
 
-# print(hash_table.get_val('1'))
-print(hash_table)
-
-# this reads distance file line by line and creates a map matrix
+# this reads distance file line by line and fills the empty map matrix
 with open("wgups_distance_table.txt") as f:
     for line in f:
         line = line.strip('\n')
         row = line.split(" ")
         map_matrix.append(row)
 
+
+# print(hash_table.get_val('1'))
+# print(hash_table)
 # print(map_matrix)
+print(address_dictionary)
