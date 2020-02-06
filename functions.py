@@ -47,9 +47,16 @@ class HashTable:
 
 class CreateDict:
 
-# initializes the object with empty dictionary  
+# initializes the object with empty dictionary
     def __init__(self):
         self.dictionary = {}
+
+    def add_to_dict(self, key, index):
+        if key in self.dictionary:
+            list_of_indices = [self.dictionary[key],index]
+            self.dictionary[key] = list_of_indices
+        else:
+            self.dictionary[key] = index
 
 # This dunder method prints string representation of dictionary
     def __str__(self):
@@ -72,12 +79,13 @@ address_dictionary = CreateDict()
 with open("package_file.txt") as f:
     for line in f:
         line = line.strip('\n')
-        key, street_address, city, state, zip_code, delivery_deadline, weight, special_note = line.split(",")
+        package_key, street_address, city, state, zip_code, delivery_deadline, weight, special_note = line.split(",")
         delivery_status = 'hub'
+        address_dictionary.add_to_dict(street_address, package_key)
         value = {'delivery_address':street_address, 'city':city,
                  'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
-        hash_table.set_val(key, value)
+        hash_table.set_val(package_key, value)
 
 # this reads distance file line by line and fills the empty map matrix
 with open("wgups_distance_table.txt") as f:
@@ -87,7 +95,11 @@ with open("wgups_distance_table.txt") as f:
         map_matrix.append(row)
 
 
+
 # print(hash_table.get_val('1'))
 # print(hash_table)
 # print(map_matrix)
-print(address_dictionary)
+print(address_dictionary) # the reason the index is off is because the street addresses have duplicates
+                          # and keys of dictionaries are unique. The address gets assigned to the last
+                          # address of the duplicates. That is why there are fewer than 40 entries into
+                          # the dictionary
