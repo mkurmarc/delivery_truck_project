@@ -51,14 +51,13 @@ class CreateDict:
     def __init__(self):
         self.dictionary = {}
 
+# time complexity of O(1)
     def add_to_dict(self, key, index):
         if key in self.dictionary:
             if isinstance(self.dictionary[key], list):
                 self.dictionary[key].append(index)
             else:
-                list_of_indices = []
-                list_of_indices.append(self.dictionary[key])
-                list_of_indices.append(index)
+                list_of_indices = [self.dictionary[key], index]
                 self.dictionary[key] = list_of_indices
         else:
             self.dictionary[key] = index
@@ -104,7 +103,4 @@ with open("wgups_distance_table.txt") as f:
 # print(hash_table.get_val('1'))
 # print(hash_table)
 # print(map_matrix)
-print(address_dictionary) # the reason the index is off is because the street addresses have duplicates
-                          # and keys of dictionaries are unique. The address gets assigned to the last
-                          # address of the duplicates. That is why there are fewer than 40 entries into
-                          # the dictionary
+print(address_dictionary)
