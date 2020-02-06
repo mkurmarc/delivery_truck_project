@@ -1,14 +1,17 @@
 # Marc
 class HashTable:
 
+# initializes the object and creates the empty hash table with empty buckets
     def __init__(self, size):
         self.size = size
         self.hash_table = self.create_buckets()
 
+# creates the empty buckets
     def create_buckets(self):
         return [[] for _ in range(self.size)]
 
-    def set_val(self, key, value): # insert and update method
+# insert and update key, value information with O(N) complexity
+    def set_val(self, key, value):
         hashed_key = hash(key)%self.size
         bucket = self.hash_table[hashed_key]
         found_key = False
@@ -22,6 +25,7 @@ class HashTable:
         else:
             bucket.append((key, value)) # appending stops collisions from happening
 
+# retrieves value from hash table with O(N) complexity
     def get_val(self, key):
         hashed_key = hash(key)%self.size
         bucket = self.hash_table[hashed_key]
@@ -36,18 +40,18 @@ class HashTable:
         else:
             return "No record found with that email address"
 
+# This dunder method prints string representation of hash_table
     def __str__(self):
         return "".join(str(item) for item in self.hash_table)
 
 
 class CreateDict:
 
+# initializes the object with empty dictionary  
     def __init__(self):
-        self.dictionary = self.create_dict()
+        self.dictionary = {}
 
-    def create_dict(self):
-        return {}
-
+# This dunder method prints string representation of dictionary
     def __str__(self):
         return str(self.dictionary)
 
