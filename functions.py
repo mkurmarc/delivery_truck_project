@@ -40,21 +40,16 @@ class HashTable:
         return "".join(str(item) for item in self.hash_table)
 
 
-class AddressDict:
+class CreateDict:
 
-    def __init__(self, size):
-         self.size = size
-         self.address_dict = self.create_dict()
+    def __init__(self):
+        self.dictionary = self.create_dict()
 
     def create_dict(self):
-        return ({} for _ in range(self.size))
+        return {}
 
     def __str__(self):
-        return "".join(str(item) for item in self.address_dict)
-
-    def add_to_dict(self, key, value):
-
-
+        return str(self.dictionary)
 
 
 
@@ -67,7 +62,7 @@ hash_table = HashTable(100)
 map_matrix = []
 
 # creates empty address dictionary that will be used to map an address to its corresponding index to the list in the map matrix
-address_dictionary = AddressDict(40)
+address_dictionary = CreateDict()
 
 # this reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method
 with open("package_file.txt") as f:
