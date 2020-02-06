@@ -53,8 +53,13 @@ class CreateDict:
 
     def add_to_dict(self, key, index):
         if key in self.dictionary:
-            list_of_indices = [self.dictionary[key],index]
-            self.dictionary[key] = list_of_indices
+            if isinstance(self.dictionary[key], list):
+                self.dictionary[key].append(index)
+            else:
+                list_of_indices = []
+                list_of_indices.append(self.dictionary[key])
+                list_of_indices.append(index)
+                self.dictionary[key] = list_of_indices
         else:
             self.dictionary[key] = index
 
