@@ -1,5 +1,6 @@
 # Marc
 from time import time
+import re
 
 class HashTable:
 
@@ -38,7 +39,7 @@ class HashTable:
                 found_key = True
                 break
         if found_key:
-            return record_value
+            return record_key, record_value
         else:
             return "No package found with that key"
 
@@ -66,17 +67,25 @@ class Truck:
         hours, minutes = divmod(minutes, 60)
         return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
-    # This method loads packages from hash map to the truck_cargo of truck object
-    def load_truck(self, package):
+    # These methods load packages from hash map to the truck_cargo of truck object. The 1,2,3 means the 1st, 2nd, or 3rd trip.
+    # It is going to take a toal of three truck routes/trips to deliver all the packages
+    def load_truck_1(self, package):
+        package_id, package_info = package
+        if 'Must' in package_info['special_note']:
+            self.truck_cargo.append(package)
+            
+
+    def load_truck_2(self, package):
         self.truck_cargo.append(package)
 
-
+    def load_truck_3(self, package):
+        self.truck_cargo.append(package)
 
 
 
 ################################ Program Script Below ################################ transfer to main later
 
-# creates hash table with 100 buckets
+# creates hash table with 41 buckets to avoid collisions
 hash_table = HashTable(41)
 
 # creates list of vertices aka addresses, hub address is added here
@@ -119,10 +128,12 @@ print(truck_1)
 # print(truck_2)
 
 for package in range(hash_table.size):
-    truck_1.load_truck(hash_table.get_val(package))
+    if package > 0:
+        truck_1.load_truck_1(hash_table.get_val(package))
 
-for package in range(hash_table.size):
-    truck_2.load_truck(hash_table.get_val(package))
+# for package in range(hash_table.size):
+#     package = 1
+#     truck_2.load_truck_2(hash_table.get_val(package))
 
 # truck_2.load_truck(hash_table.get_val('2'))
 print(truck_1)
