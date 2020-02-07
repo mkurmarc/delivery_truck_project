@@ -1,5 +1,6 @@
 # Marc
 from time import time
+import re
 
 class HashTable:
 
@@ -69,7 +70,10 @@ class Truck:
     # These methods load packages from hash map to the truck_cargo of truck object. The 1,2,3 means the 1st, 2nd, or 3rd trip.
     # It is going to take a toal of three truck routes/trips to deliver all the packages
     def load_truck_1(self, package):
-        self.truck_cargo.append(package)
+        package_id, package_info = package
+        if 'Must' in package_info['special_note']:
+            self.truck_cargo.append(package)
+            
 
     def load_truck_2(self, package):
         self.truck_cargo.append(package)
