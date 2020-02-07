@@ -79,7 +79,8 @@ map_matrix = []
 # creates empty address dictionary that will be used to map an address to its corresponding index to the list in the map matrix
 address_dictionary = CreateDict()
 
-# this reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method
+# this reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
+#Also, with the read in data, the add_to_dict method adds to the empty dictionary.
 with open("package_file.txt") as f:
     for line in f:
         line = line.strip('\n')
