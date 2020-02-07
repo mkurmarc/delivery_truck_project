@@ -38,7 +38,7 @@ class HashTable:
                 found_key = True
                 break
         if found_key:
-            return record_value
+            return record_key, record_value
         else:
             return "No package found with that key"
 
@@ -119,9 +119,11 @@ print(truck_1)
 # print(truck_2)
 
 for package in range(hash_table.size):
+    package = 1
     truck_1.load_truck(hash_table.get_val(package))
 
 for package in range(hash_table.size):
+    package = 1
     truck_2.load_truck(hash_table.get_val(package))
 
 # truck_2.load_truck(hash_table.get_val('2'))
