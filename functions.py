@@ -77,13 +77,15 @@ class Truck:
 
     def __str__(self):
         return (f"Truck's cargo includes {self.truck_cargo}\nTruck left from hub at {self.start_time}\
-                     \nTotal time is {self.acc_time}") # use total time to mark packages on board as either in transit, delivered, or at hub
+                \nTotal time is {self.acc_time}") # use total time to mark packages on board as either in transit, delivered, or at hub
 
     # function to calculate time given distance and speed
-    def calculate_time(self, dist, speed):
-        print("Distance(km) :", dist);
-        print("Speed(km / hr) :", speed);
-        return speed * dist;
+    def calculate_time(self, distance, speed):
+        float_time = distance/speed
+        time_in_seconds = float_time * 60 * 60
+        minutes, seconds = divmod(time_in_seconds, 60)
+        hours, minutes = divmod(minutes, 60)
+        return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
 # Distance  = Speed * Time
 # Time = Distance / Speed
@@ -132,4 +134,4 @@ with open("wgups_distance_table.txt") as f:
 print(truck_1)
 
 # Calling function cal_time() using rate of 18 mph
-print("The calculated Time(hr) :", truck_1.calculate_time(100, 18));
+print("The calculated time is", truck_1.calculate_time(100, 18));
