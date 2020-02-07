@@ -46,28 +46,6 @@ class HashTable:
     def __str__(self):
         return "".join(str(item) for item in self.hash_table)
 
-# removing CreateDict class and replacing it with a list or vertices aka addresses
-
-class CreateDict:
-
-# initializes the object with empty dictionary
-    def __init__(self):
-        self.dictionary = {}
-
-# time complexity of O(1)
-    def add_to_dict(self, key, index):
-        if key in self.dictionary:
-            if isinstance(self.dictionary[key], list):
-                self.dictionary[key].append(index)
-            else:
-                list_of_indices = [self.dictionary[key], index]
-                self.dictionary[key] = list_of_indices
-        else:
-            self.dictionary[key] = index
-
-# This dunder method prints string representation of dictionary
-    def __str__(self):
-        return str(self.dictionary)
 
 class Truck:
 
@@ -99,26 +77,27 @@ class Truck:
 # creates hash table
 hash_table = HashTable(100)
 
+# list of vertices aka addresses
+vertex_list = []
+
 # creates empty map matrix to be use for distances between addresses
 map_matrix = []
 
-# creates empty address dictionary that will be used to map an address to its corresponding index to the list in the map matrix
-address_dictionary = CreateDict()
 
 truck_1 = Truck('08:00:00')
 
-# this reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
-#Also, with the read in data, the add_to_dict method adds to the empty dictionary.
+# This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
+# Also, this block of code appends street_address to empty vertex_list
 with open("package_file.txt") as f:
     for line in f:
         line = line.strip('\n')
         package_key, street_address, city, state, zip_code, delivery_deadline, weight, special_note = line.split(",")
         delivery_status = 'hub'
-        address_dictionary.add_to_dict(street_address, package_key)
         value = {'delivery_address':street_address, 'city':city,
                  'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
         hash_table.set_val(package_key, value)
+        vertex_list.append(street_address)
 
 # this reads distance file line by line and fills the empty map matrix
 with open("wgups_distance_table.txt") as f:
@@ -128,11 +107,11 @@ with open("wgups_distance_table.txt") as f:
         map_matrix.append(row)
 
 # print(hash_table.get_val('1'))
-# print(hash_table)
+print(hash_table)
 # print(map_matrix)
-# print(address_dictionary)
+# print(truck_1)
 
-print(truck_1)
+print(vertex_list)
 
 # Calling function cal_time() using rate of 18 mph
 print("The calculated time is", truck_1.calculate_time(100, 18));
