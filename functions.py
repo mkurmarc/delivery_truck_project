@@ -66,6 +66,7 @@ class Truck:
         hours, minutes = divmod(minutes, 60)
         return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
+    # This method loads packages from hash map to the truck_cargo of truck object
     def load_truck(self, package):
         self.truck_cargo.append(package)
 
