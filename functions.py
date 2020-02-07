@@ -46,6 +46,7 @@ class HashTable:
     def __str__(self):
         return "".join(str(item) for item in self.hash_table)
 
+# removing CreateDict class and replacing it with a list or vertices aka addresses
 
 class CreateDict:
 
