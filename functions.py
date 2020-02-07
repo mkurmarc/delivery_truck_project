@@ -73,7 +73,7 @@ class Truck:
         package_id, package_info = package
         if 'Must' in package_info['special_note']:
             self.truck_cargo.append(package)
-            
+        # add here    
 
     def load_truck_2(self, package):
         self.truck_cargo.append(package)
