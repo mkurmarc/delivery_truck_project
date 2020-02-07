@@ -40,7 +40,7 @@ class HashTable:
         if found_key:
             return record_value
         else:
-            return "No record found with that email address"
+            return "No package found with that key"
 
 # This dunder method prints string representation of hash_table
     def __str__(self):
@@ -66,6 +66,7 @@ class Truck:
         hours, minutes = divmod(minutes, 60)
         return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
+    # This method loads packages from hash map to the truck_cargo of truck object
     def load_truck(self, package):
         self.truck_cargo.append(package)
 
@@ -76,19 +77,21 @@ class Truck:
 ################################ Program Script Below ################################ transfer to main later
 
 # creates hash table with 100 buckets
-hash_table = HashTable(100)
+hash_table = HashTable(41)
 
-# creates empty list of vertices aka addresses
-vertex_list = []
+# creates list of vertices aka addresses, hub address is added here
+hub = '4001 South 700 East'
+vertex_list = [hub]
 
 # creates empty map matrix to be use for distances between addresses
 map_matrix = []
 
 # creates truck object
 truck_1 = Truck('08:00:00')
+truck_2 = Truck('09:05:00')
 
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
-# Also, this block of code appends street_address to empty vertex_list
+# Also, this block of code appends all street_address to empty vertex_list
 with open("package_file.txt") as f:
     for line in f:
         line = line.strip('\n')
@@ -97,7 +100,7 @@ with open("package_file.txt") as f:
         value = {'delivery_address':street_address, 'city':city,
                  'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
-        hash_table.set_val(package_key, value)
+        hash_table.set_val(int(package_key), value)
         vertex_list.append(street_address)
 
 # this reads distance file line by line and fills the empty map matrix . There are only 27 unique addresses
@@ -110,11 +113,20 @@ with open("wgups_distance_table.txt") as f:
 # print(hash_table.get_val('1'))
 # print(hash_table)
 # print(map_matrix)
-print(truck_1)
 # print(vertex_list)
 
-truck_1.load_truck(hash_table.get_val('1'))
 print(truck_1)
+# print(truck_2)
 
-# Calling function cal_time() using rate of 18 mph
+for package in range(hash_table.size):
+    truck_1.load_truck(hash_table.get_val(package))
+
+for package in range(hash_table.size):
+    truck_2.load_truck(hash_table.get_val(package))
+
+# truck_2.load_truck(hash_table.get_val('2'))
+print(truck_1)
+# print(truck_2)
+
+# Calling function calculate_time() using rate of 18 mph
 print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
