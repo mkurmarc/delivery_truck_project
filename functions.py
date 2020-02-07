@@ -79,17 +79,18 @@ class Truck:
 # creates hash table with 100 buckets
 hash_table = HashTable(100)
 
-# creates empty list of vertices aka addresses
-vertex_list = []
+# creates list of vertices aka addresses, hub address is added here
+vertex_list = ['4001 South 700 East']
 
 # creates empty map matrix to be use for distances between addresses
 map_matrix = []
 
 # creates truck object
 truck_1 = Truck('08:00:00')
+truck_2 = Truck('09:05:00')
 
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
-# Also, this block of code appends street_address to empty vertex_list
+# Also, this block of code appends all street_address to empty vertex_list
 with open("package_file.txt") as f:
     for line in f:
         line = line.strip('\n')
@@ -111,11 +112,19 @@ with open("wgups_distance_table.txt") as f:
 # print(hash_table.get_val('1'))
 # print(hash_table)
 # print(map_matrix)
-print(truck_1)
 # print(vertex_list)
 
-truck_1.load_truck(hash_table.get_val('1'))
+# print(truck_1)
+# print(truck_2)
+
+for package in range(hash_table.size):
+    if hash_table.get_val(str(package)) in hash_table:
+        truck_1.load_truck(hash_table.get_val(str(package)))
+
+
+# truck_2.load_truck(hash_table.get_val('2'))
 print(truck_1)
+# print(truck_2)
 
 # Calling function cal_time() using rate of 18 mph
 print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
