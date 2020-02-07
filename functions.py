@@ -99,9 +99,7 @@ with open("wgups_distance_table.txt") as f:
         row = line.split(" ")
         map_matrix.append(row)
 
-
-
 # print(hash_table.get_val('1'))
 # print(hash_table)
 # print(map_matrix)
-print(address_dictionary)
+# print(address_dictionary)
