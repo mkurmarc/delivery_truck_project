@@ -75,13 +75,17 @@ class Truck:
             pattern = re.compile(r'[1-9]+[1-9]+')
             match = pattern.findall(package_info['special_note'])
             if match:
-                self.truck_cargo.append(package)
+                self.truck_cargo.append(package_id)
                 match_1 = int(match[0])
                 match_2 = int(match[1])
                 if match_1 not in self.truck_cargo:
-                    self.truck_cargo.append(hash_table.get_val(int(match[0])))
+                    package_2 = hash_table.get_val(int(match[0]))
+                    package_2_id, package_2_info = package_2
+                    self.truck_cargo.append(package_2_id)
                 if match_2 not in self.truck_cargo:
-                    self.truck_cargo.append(hash_table.get_val(int(match[1])))
+                    package_3 = hash_table.get_val(int(match[1]))
+                    package_3_id, package_3_info = package_3
+                    self.truck_cargo.append(package_3_id)
 
     def load_truck_2(self, package):
         self.truck_cargo.append(package)
