@@ -135,9 +135,8 @@ with open("wgups_distance_table.txt") as f:
 print(truck_1)
 # print(truck_2)
 
-for package in range(hash_table.size):
-    if package > 0:
-        truck_1.load_truck_1(hash_table.get_val(package))
+for package in range(1, hash_table.size):
+    truck_1.load_truck_1(hash_table.get_val(package))
 
 # for package in range(hash_table.size):
 #     package = 1
