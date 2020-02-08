@@ -56,7 +56,7 @@ class Truck:
         self.truck_cargo = []
 
     def __str__(self):
-        return (f"Truck's cargo includes {self.truck_cargo}\nTruck left from hub at {self.start_time}\
+        return (f"Truck's cargo includes: {self.truck_cargo}\nTruck left from hub at {self.start_time}\
                 \nTotal time is {self.acc_time}") # use total time to mark packages on board as either in transit, delivered, or at hub
 
     # function to calculate time given distance and speed. Time = Distance / Speed
@@ -67,27 +67,41 @@ class Truck:
         hours, minutes = divmod(minutes, 60)
         return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
+    def find_dependent_packages(self):
+        dependent_list = []
+        pattern = re.compile(r'[1-9]+[1-9]+')
+        for p in range(1, hash_table.size):
+            package = hash_table.get_val(p)
+            package_id, package_info = package
+            match = pattern.findall(package_info['special_note'])
+            if package not in self.truck_cargo:
+                if match:
+                    dependent_list.append(package)
+        for d in range(len(dependent_list)):
+            package = dependent_list[d]
+            package_id, package_info = package
+            match = pattern.findall(package_info['special_note'])
+            if int(match[0]) not in dependent_list[1:len(dependent_list)][0]:
+                new_package = hash_table.get_val(int(match[0]))
+                dependent_list.append(new_package)
+            if int(match[1]) not in dependent_list[1:len(dependent_list)][0]:
+                another_package = hash_table.get_val(int(match[1]))
+                dependent_list.append(another_package)
+        return dependent_list
+
     # These methods load packages from hash map to the truck_cargo of truck object. The 1,2,3 means the 1st, 2nd, or 3rd trip.
     # It is going to take a toal of three truck routes/trips to deliver all the packages
-    def load_truck_1(self, package):
-        package_id, package_info = package
-        if package not in self.truck_cargo:
-            pattern = re.compile(r'[1-9]+[1-9]+')
-            match = pattern.findall(package_info['special_note'])
-            if match:
-                self.truck_cargo.append(package)
-                match_1 = int(match[0])
-                match_2 = int(match[1])
-                if match_1 not in self.truck_cargo:
-                    self.truck_cargo.append(hash_table.get_val(int(match[0])))
-                if match_2 not in self.truck_cargo:
-                    self.truck_cargo.append(hash_table.get_val(int(match[1])))
+    def load_truck_1(self, packages):
+        for items in packages:
+            self.truck_cargo.append(items)
 
-    def load_truck_2(self, package):
-        self.truck_cargo.append(package)
+    def load_truck_2(self, packages):
+        for items in packages:
+            self.truck_cargo.append(items)
 
-    def load_truck_3(self, package):
-        self.truck_cargo.append(package)
+    def load_truck_3(self, packages):
+        for items in packages:
+            self.truck_cargo.append(items)
 
 
 
@@ -127,25 +141,18 @@ with open("wgups_distance_table.txt") as f:
         row = line.split(" ")
         map_matrix.append(row)
 
+# print(truck_1)
+
+# uses find_dependent_packages method to create list of dependent packages. Then loads the list into the load_truck_1 method
+dependent_packages = truck_1.find_dependent_packages()
+truck_1.load_truck_1(dependent_packages)
+
 # print(hash_table.get_val('1'))
 # print(hash_table)
 # print(map_matrix)
 # print(vertex_list)
 
 print(truck_1)
-# print(truck_2)
-
-for package in range(hash_table.size):
-    if package > 0:
-        truck_1.load_truck_1(hash_table.get_val(package))
-
-# for package in range(hash_table.size):
-#     package = 1
-#     truck_2.load_truck_2(hash_table.get_val(package))
-
-# truck_2.load_truck(hash_table.get_val('2'))
-print(truck_1)
-# print(truck_2)
 
 # Calling function calculate_time() using rate of 18 mph
-print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
+# print("The calculated time is", truck_1.calculate_time(100, 18)) # 1st parameter can be a variable received from algorithm
