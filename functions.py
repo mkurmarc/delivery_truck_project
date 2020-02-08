@@ -71,17 +71,17 @@ class Truck:
     # It is going to take a toal of three truck routes/trips to deliver all the packages
     def load_truck_1(self, package):
         package_id, package_info = package
-        if package not in self.truck_cargo:
+        if package_id not in self.truck_cargo.keys():
             pattern = re.compile(r'[1-9]+[1-9]+')
             match = pattern.findall(package_info['special_note'])
             if match:
                 self.truck_cargo.append(package)
-                match_1 = int(match[0])
-                match_2 = int(match[1])
-                if match_1 not in self.truck_cargo:
-                    self.truck_cargo.append(hash_table.get_val(int(match[0])))
-                if match_2 not in self.truck_cargo:
-                    self.truck_cargo.append(hash_table.get_val(int(match[1])))
+                # match_1 = int(match[0])
+                # match_2 = int(match[1])
+                # if match_1 not in self.truck_cargo:
+                #     self.truck_cargo.append(hash_table.get_val(int(match[0])))
+                # if match_2 not in self.truck_cargo:
+                #     self.truck_cargo.append(hash_table.get_val(int(match[1])))
 
     def load_truck_2(self, package):
         self.truck_cargo.append(package)
