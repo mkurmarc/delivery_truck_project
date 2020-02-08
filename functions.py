@@ -69,19 +69,27 @@ class Truck:
 
     # These methods load packages from hash map to the truck_cargo of truck object. The 1,2,3 means the 1st, 2nd, or 3rd trip.
     # It is going to take a toal of three truck routes/trips to deliver all the packages
-    def load_truck_1(self, package):
-        package_id, package_info = package
-        if package_id not in self.truck_cargo.keys():
-            pattern = re.compile(r'[1-9]+[1-9]+')
-            match = pattern.findall(package_info['special_note'])
-            if match:
-                self.truck_cargo.append(package)
-                # match_1 = int(match[0])
-                # match_2 = int(match[1])
-                # if match_1 not in self.truck_cargo:
-                #     self.truck_cargo.append(hash_table.get_val(int(match[0])))
-                # if match_2 not in self.truck_cargo:
-                #     self.truck_cargo.append(hash_table.get_val(int(match[1])))
+    def load_truck_1(self):
+        for i in range(hash_table.size):
+            if i > 0:
+                package = hash_table.get_val(i)
+                package_id, package_info = package
+                pattern = re.compile(r'[1-9]+[1-9]+')
+                match = pattern.findall(package_info['special_note'])
+                for k in range(len(self.truck_cargo)+1):
+                    if len(self.truck_cargo) == 0:
+                        if match:
+                            self.truck_cargo.append(package)
+                    elif len(self.truck_cargo) > 0:
+                        if match and package_id != self.truck_cargo[k-1][0]:
+                            self.truck_cargo.append(package)
+
+                            # match_1 = int(match[0])
+                            # match_2 = int(match[1])
+                            # if match_1 not in self.truck_cargo:
+                            #     self.truck_cargo.append(hash_table.get_val(int(match[0])))
+                            # if match_2 not in self.truck_cargo:
+                            #     self.truck_cargo.append(hash_table.get_val(int(match[1])))
 
     def load_truck_2(self, package):
         self.truck_cargo.append(package)
@@ -135,9 +143,7 @@ with open("wgups_distance_table.txt") as f:
 print(truck_1)
 # print(truck_2)
 
-for package in range(hash_table.size):
-    if package > 0:
-        truck_1.load_truck_1(hash_table.get_val(package))
+truck_1.load_truck_1()
 
 # for package in range(hash_table.size):
 #     package = 1
@@ -148,4 +154,4 @@ print(truck_1)
 # print(truck_2)
 
 # Calling function calculate_time() using rate of 18 mph
-print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
+# print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
