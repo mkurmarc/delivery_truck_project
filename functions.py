@@ -70,22 +70,7 @@ class Truck:
     # These methods load packages from hash map to the truck_cargo of truck object. The 1,2,3 means the 1st, 2nd, or 3rd trip.
     # It is going to take a toal of three truck routes/trips to deliver all the packages
     def load_truck_1(self, package):
-        package_id, package_info = package
-        if package not in self.truck_cargo:
-            pattern = re.compile(r'[1-9]+[1-9]+')
-            match = pattern.findall(package_info['special_note'])
-            if match:
-                self.truck_cargo.append(package_id)
-                match_1 = int(match[0])
-                match_2 = int(match[1])
-                if match_1 not in self.truck_cargo:
-                    package_2 = hash_table.get_val(int(match[0]))
-                    package_2_id, package_2_info = package_2
-                    self.truck_cargo.append(package_2_id)
-                if match_2 not in self.truck_cargo:
-                    package_3 = hash_table.get_val(int(match[1]))
-                    package_3_id, package_3_info = package_3
-                    self.truck_cargo.append(package_3_id)
+        pass
 
     def load_truck_2(self, package):
         self.truck_cargo.append(package)
