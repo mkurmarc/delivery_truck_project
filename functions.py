@@ -67,6 +67,7 @@ class Truck:
         hours, minutes = divmod(minutes, 60)
         return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
+#SAVE THIS BELOW
     # These methods load packages from hash map to the truck_cargo of truck object. The 1,2,3 means the 1st, 2nd, or 3rd trip.
     # It is going to take a toal of three truck routes/trips to deliver all the packages
     def load_truck_1(self, package):
