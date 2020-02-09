@@ -59,7 +59,7 @@ class Truck:
         return (f"Truck's cargo includes {self.truck_cargo}\nTruck left from hub at {self.start_time}\
                 \nTotal time is {self.acc_time}") # use total time to mark packages on board as either in transit, delivered, or at hub
 
-    # function to calculate time given distance and speed. Time = Distance / Speed
+# function to calculate time given distance and speed. Time = Distance / Speed
     def calculate_time(self, distance, speed):
         float_time = distance/speed
         time_in_seconds = float_time * 60 * 60
@@ -67,17 +67,21 @@ class Truck:
         hours, minutes = divmod(minutes, 60)
         return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
-    # These methods load packages from hash map to the truck_cargo of truck object. The 1,2,3 means the 1st, 2nd, or 3rd trip.
-    # It is going to take a toal of three truck routes/trips to deliver all the packages
-    def load_truck_1(self, package):
-        pass
+# These methods load packages from hash map to the truck_cargo of truck object. The 1,2,3 means the 1st, 2nd, or 3rd trip.
+# It is going to take a toal of three truck routes/trips to deliver all the packages
+    def load_truck_1(self, list):
+        package_list = list
+        for i in range(len(list)):
+            self.truck_cargo.append(package_list[i])
 
-    def load_truck_2(self, package):
-        self.truck_cargo.append(package)
-
-    def load_truck_3(self, package):
-        self.truck_cargo.append(package)
-
+    def load_truck_2(self, list):
+        package_list = list
+        for i in range(len(list)):
+            self.truck_cargo.append(package_list[i])
+    def load_truck_3(self, list):
+        package_list = list
+        for i in range(len(list)):
+            self.truck_cargo.append(package_list[i])
 
 
 ################################ Program Script Below ################################ transfer to main later
@@ -92,9 +96,20 @@ vertex_list = [hub]
 # creates empty map matrix to be use for distances between addresses
 map_matrix = []
 
-# creates truck object
+# lists of packages for each trip and truck. They are sorted too.
+package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
+package_list_trip_1 = sorted(package_list_trip_1)
+
+package_list_trip_2 = [31, 32, 37, 38, 5, 3, 18, 36, 6, 25, 26, 28, 2, 33, 27, 35]
+package_list_trip_2 = sorted(package_list_trip_2)
+
+package_list_trip_3 = [9, 10, 11, 12, 17, 22, 23, 24]
+package_list_trip_3 = sorted(package_list_trip_3)
+
+# create truck objects
 truck_1 = Truck('08:00:00')
 truck_2 = Truck('09:05:00')
+truck_3 = Truck('10:20:00')
 
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
 # Also, this block of code appends all street_address to empty vertex_list
@@ -116,24 +131,14 @@ with open("wgups_distance_table.txt") as f:
         row = line.split(" ")
         map_matrix.append(row)
 
-# print(hash_table.get_val('1'))
 # print(hash_table)
 # print(map_matrix)
 # print(vertex_list)
 
-print(truck_1)
-# print(truck_2)
-
-for package in range(1, hash_table.size):
-    truck_1.load_truck_1(hash_table.get_val(package))
-
-# for package in range(hash_table.size):
-#     package = 1
-#     truck_2.load_truck_2(hash_table.get_val(package))
-
-# truck_2.load_truck(hash_table.get_val('2'))
-print(truck_1)
-# print(truck_2)
+# all three trucks are loaded with the packages according to the special notes
+truck_1.load_truck_1(package_list_trip_1)
+truck_2.load_truck_2(package_list_trip_2)
+truck_3.load_truck_3(package_list_trip_3)
 
 # Calling function calculate_time() using rate of 18 mph
-print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
+# print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
