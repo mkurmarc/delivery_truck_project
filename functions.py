@@ -162,13 +162,19 @@ truck_3.load_truck_3(package_list_trip_3)
 # print(vertex_list.index(hub))
 
 
-
+row_list = []
+min_row_list = []
 for i in range(len(truck_1.address_list)):
+    row_list.clear()
     for j in range(len(truck_1.address_list)):
         start = i # hub address is 0 in vertex list
         next_loc = vertex_dictionary[truck_1.address_list[j]]
-        current_distance = map_matrix[start][next_loc]
-        print(current_distance)
+        row_list.append(map_matrix[start][next_loc])
+        if len(row_list) == len(truck_1.address_list):
+            min_row_list.append(min(row_list))
+
+print(min_row_list)
+
 
 
 
