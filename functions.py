@@ -147,7 +147,7 @@ with open("wgups_distance_table.txt") as f:
 
 # print(hash_table)
 # print(map_matrix)
-print(vertex_dictionary)
+# print(vertex_dictionary)
 
 # all three trucks are loaded with the packages according to the special notes. Packages now in truck_cargo
 truck_1.load_truck_1(package_list_trip_1)
@@ -163,14 +163,13 @@ truck_3.load_truck_3(package_list_trip_3)
 
 
 
-# for i in range(len(truck_1.address_list)):
-#     for j in range(len(truck_1.address_list)):
-#         start = vertex_list.index(vertex_list[i]) # hub address is 0 in vertex list
-#         next_loc = vertex_list.index(truck_1.address_list[j])
-#         current_distance = map_matrix[start][next_loc]
+for i in range(len(truck_1.address_list)):
+    for j in range(len(truck_1.address_list)):
+        start = i # hub address is 0 in vertex list
+        next_loc = vertex_dictionary[truck_1.address_list[j]]
+        current_distance = map_matrix[start][next_loc]
+        print(current_distance)
 
-        # start = vertex_list.index(truck_1.address_list[i])
-        # min_distance = map_matrix[start_loc][j]
 
 
 
