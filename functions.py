@@ -71,13 +71,13 @@ class Truck:
         hours, minutes = divmod(minutes, 60)
         return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
-# These methods load packages from hash map to the truck_cargo of truck object. The 1,2,3 means the 1st, 2nd, or 3rd trip.
+# These methods load packages from hash map to the truck_cargo of truck object, and
+# loads the addresses to the address_list. The 1,2,3 means the 1st, 2nd, or 3rd trip.
 # It is going to take a toal of three truck routes/trips to deliver all the packages
     def load_truck_1(self, list):
         package_list = list
         for i in range(len(list)):
             self.truck_cargo.append(hash_table.get_val(package_list[i]))
-        for i in range(len(truck_1.truck_cargo)):
             package_id, package_info = truck_1.truck_cargo[i]
             self.address_list.append(package_info['delivery_address'])
 
@@ -103,9 +103,6 @@ vertex_list = [hub]
 
 # creates empty map matrix to be use for distances between addresses
 map_matrix = []
-
-#
-
 
 # creates empty queue list. This will store each trucks path/route
 queue_list = []
@@ -149,7 +146,7 @@ with open("wgups_distance_table.txt") as f:
 
 # print(hash_table)
 # print(map_matrix)
-# print(vertex_list)
+print(vertex_list)
 
 # all three trucks are loaded with the packages according to the special notes. Packages now in truck_cargo
 truck_1.load_truck_1(package_list_trip_1)
@@ -157,6 +154,7 @@ truck_2.load_truck_2(package_list_trip_2)
 truck_3.load_truck_3(package_list_trip_3)
 
 print(truck_1.address_list)
+# print(vertex_list.index(truck_1.address_list[0]))
 
 # greedy algo: add to fucntions later
 # start_location = hub
@@ -164,10 +162,15 @@ print(truck_1.address_list)
 
 
 
-# for i in range(len(vertex_list)):
-#     for j in range(len(vertex_list)):
-#         vertex_list[i]
-#         map_matrix[i][j]
+for i in range(len(truck_1.address_list)):
+    for j in range(len(truck_1.address_list)):
+        start = vertex_list.index(vertex_list[i]) # hub address is 0 in vertex list
+        next_loc = vertex_list.index(truck_1.address_list[j])
+        current_distance = map_matrix[start][next_loc]
+
+        # start = vertex_list.index(truck_1.address_list[i])
+        # min_distance = map_matrix[start_loc][j]
+
 
 
 # Calling function calculate_time() using rate of 18 mph
