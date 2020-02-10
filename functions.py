@@ -97,9 +97,8 @@ class Truck:
 # creates hash table with 41 buckets to avoid collisions
 hash_table = HashTable(41)
 
-# creates list of vertices aka addresses, hub address is added here
-hub = '4001 South 700 East'
-vertex_list = [hub]
+# creates vertex dict aka addresses, hub address is added here
+vertex_dictionary = {'4001 South 700 East': 0}
 
 # creates empty map matrix to be use for distances between addresses
 map_matrix = []
@@ -133,8 +132,10 @@ with open("package_file.txt") as f:
                  'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
         hash_table.set_val(int(package_key), value)
-        if street_address not in vertex_list:
-            vertex_list.append(street_address)
+        if street_address not in vertex_dictionary:
+            vertex_dictionary[street_address] = int(package_key)
+
+
 
 # this reads distance file line by line and fills the empty map matrix . There are only 27 unique addresses
 with open("wgups_distance_table.txt") as f:
@@ -146,14 +147,14 @@ with open("wgups_distance_table.txt") as f:
 
 # print(hash_table)
 # print(map_matrix)
-print(vertex_list)
+print(vertex_dictionary)
 
 # all three trucks are loaded with the packages according to the special notes. Packages now in truck_cargo
 truck_1.load_truck_1(package_list_trip_1)
 truck_2.load_truck_2(package_list_trip_2)
 truck_3.load_truck_3(package_list_trip_3)
 
-print(truck_1.address_list)
+# print(truck_1.address_list)
 # print(vertex_list.index(truck_1.address_list[0]))
 
 # greedy algo: add to fucntions later
@@ -162,11 +163,11 @@ print(truck_1.address_list)
 
 
 
-for i in range(len(truck_1.address_list)):
-    for j in range(len(truck_1.address_list)):
-        start = vertex_list.index(vertex_list[i]) # hub address is 0 in vertex list
-        next_loc = vertex_list.index(truck_1.address_list[j])
-        current_distance = map_matrix[start][next_loc]
+# for i in range(len(truck_1.address_list)):
+#     for j in range(len(truck_1.address_list)):
+#         start = vertex_list.index(vertex_list[i]) # hub address is 0 in vertex list
+#         next_loc = vertex_list.index(truck_1.address_list[j])
+#         current_distance = map_matrix[start][next_loc]
 
         # start = vertex_list.index(truck_1.address_list[i])
         # min_distance = map_matrix[start_loc][j]
