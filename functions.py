@@ -2,6 +2,9 @@
 from time import time
 import re
 
+def difference_list(list_1, list_2):
+    return list(set(list_1) - set(list_2))
+
 class HashTable:
 
 # initializes the object and creates the empty hash table with empty buckets
@@ -54,6 +57,7 @@ class Truck:
         self.start_time = s_time
         self.acc_time = s_time
         self.truck_cargo = []
+        self.address_list = []
 
     def __str__(self):
         return (f"Truck's cargo includes {self.truck_cargo}\nTruck left from hub at {self.start_time}\
@@ -72,12 +76,16 @@ class Truck:
     def load_truck_1(self, list):
         package_list = list
         for i in range(len(list)):
-            self.truck_cargo.append(package_list[i])
+            self.truck_cargo.append(hash_table.get_val(package_list[i]))
+        for i in range(len(truck_1.truck_cargo)):
+            package_id, package_info = truck_1.truck_cargo[i]
+            self.address_list.append(package_info['delivery_address'])
 
     def load_truck_2(self, list):
         package_list = list
         for i in range(len(list)):
             self.truck_cargo.append(package_list[i])
+
     def load_truck_3(self, list):
         package_list = list
         for i in range(len(list)):
@@ -96,7 +104,13 @@ vertex_list = [hub]
 # creates empty map matrix to be use for distances between addresses
 map_matrix = []
 
-# lists of packages for each trip and truck. They are sorted too.
+#
+
+
+# creates empty queue list. This will store each trucks path/route
+queue_list = []
+
+# lists of package IDs for each trip and truck. They are sorted too.
 package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
 package_list_trip_1 = sorted(package_list_trip_1)
 
@@ -122,23 +136,39 @@ with open("package_file.txt") as f:
                  'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
         hash_table.set_val(int(package_key), value)
-        vertex_list.append(street_address)
+        if street_address not in vertex_list:
+            vertex_list.append(street_address)
 
 # this reads distance file line by line and fills the empty map matrix . There are only 27 unique addresses
 with open("wgups_distance_table.txt") as f:
     for line in f:
         line = line.strip('\n')
         row = line.split(" ")
-        map_matrix.append(row)
+        item = line.split(",")
+        map_matrix.append(item)
 
 # print(hash_table)
 # print(map_matrix)
 # print(vertex_list)
 
-# all three trucks are loaded with the packages according to the special notes
+# all three trucks are loaded with the packages according to the special notes. Packages now in truck_cargo
 truck_1.load_truck_1(package_list_trip_1)
 truck_2.load_truck_2(package_list_trip_2)
 truck_3.load_truck_3(package_list_trip_3)
+
+print(truck_1.address_list)
+
+# greedy algo: add to fucntions later
+# start_location = hub
+# print(vertex_list.index(hub))
+
+
+
+# for i in range(len(vertex_list)):
+#     for j in range(len(vertex_list)):
+#         vertex_list[i]
+#         map_matrix[i][j]
+
 
 # Calling function calculate_time() using rate of 18 mph
 # print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
