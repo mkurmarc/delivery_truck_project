@@ -1,6 +1,7 @@
 # Marc
 from time import time
 import re
+import csv
 
 def difference_list(list_1, list_2):
     return list(set(list_1) - set(list_2))
@@ -94,6 +95,8 @@ class Truck:
 
 ################################ Program Script Below ################################ transfer to main later
 
+
+
 # creates hash table with 41 buckets to avoid collisions
 hash_table = HashTable(41)
 
@@ -124,36 +127,54 @@ truck_3 = Truck('10:20:00')
 
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
 # Also, this block of code appends all street_address to empty vertex_list
-with open("package_file.txt") as f:
-    for line in f:
-        line = line.strip('\n')
-        package_key, street_address, city, state, zip_code, delivery_deadline, weight, special_note = line.split(",")
-        delivery_status = 'hub'
-        value = {'delivery_address':street_address, 'city':city,
-                 'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
-                 'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
-        hash_table.set_val(int(package_key), value)
-        if street_address not in vertex_list:
-            vertex_list.append(street_address)
+# with open("package_file.txt") as f:
+#     for line in f:
+#         line = line.strip('\n')
+#         package_key, street_address, city, state, zip_code, delivery_deadline, weight, special_note = line.split(",")
+#         delivery_status = 'hub'
+#         value = {'delivery_address':street_address, 'city':city,
+#                  'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
+#                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
+#         hash_table.set_val(int(package_key), value)
+#         if street_address not in vertex_list:
+#             vertex_list.append(street_address)
 
-# this reads distance file line by line and fills the empty map matrix . There are only 27 unique addresses
-with open("wgups_distance_table.txt") as f:
-    for line in f:
-        line = line.strip('\n')
-        row = line.split(" ")
-        item = line.split(",")
-        map_matrix.append(item)
+# with open('WGUPS_package_file.csv', 'r') as csv_package_file:
+#     csv_reader = csv.reader(csv_package_file)
+#     for line in csv_reader:
+#         package_key, street_address, city, state, zip_code, delivery_deadline, weight, special_note = line.split(",")
+#         value = {'delivery_address':street_address, 'city':city,
+#                  'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
+#                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
+#         hash_table.set_val(int(package_key), value)
+
+
+
+
+with open('wgups_distance_table.csv', 'r') as csv_dist_file:
+    csv_reader = csv.reader(csv_dist_file)
+    for line in csv_reader:
+        line = list(map(float, line))
+        map_matrix.append(line)
+
 
 # print(hash_table)
-# print(map_matrix)
-print(vertex_list)
+print(map_matrix)
+# print(vertex_list)
+
+
+
+
 
 # all three trucks are loaded with the packages according to the special notes. Packages now in truck_cargo
-truck_1.load_truck_1(package_list_trip_1)
-truck_2.load_truck_2(package_list_trip_2)
-truck_3.load_truck_3(package_list_trip_3)
+# truck_1.load_truck_1(package_list_trip_1)
+# truck_2.load_truck_2(package_list_trip_2)
+# truck_3.load_truck_3(package_list_trip_3)
 
-print(truck_1.address_list)
+
+
+
+# print(truck_1.address_list)
 # print(vertex_list.index(truck_1.address_list[0]))
 
 # greedy algo: add to fucntions later
@@ -162,11 +183,11 @@ print(truck_1.address_list)
 
 
 
-for i in range(len(truck_1.address_list)):
-    for j in range(len(truck_1.address_list)):
-        start = vertex_list.index(vertex_list[i]) # hub address is 0 in vertex list
-        next_loc = vertex_list.index(truck_1.address_list[j])
-        current_distance = map_matrix[start][next_loc]
+# for i in range(len(truck_1.address_list)):
+#     for j in range(len(truck_1.address_list)):
+#         start = vertex_list.index(vertex_list[i]) # hub address is 0 in vertex list
+#         next_loc = vertex_list.index(truck_1.address_list[j])
+#         current_distance = map_matrix[start][next_loc]
 
         # start = vertex_list.index(truck_1.address_list[i])
         # min_distance = map_matrix[start_loc][j]
