@@ -143,10 +143,10 @@ with open("wgups_distance_table.txt") as f:
         line = line.strip('\n')
         row = line.split(" ")
         item = line.split(",")
-        map_matrix.append(item)
+        map_matrix.append(list(map(float, item)))
 
 # print(hash_table)
-# print(map_matrix)
+print(map_matrix)
 # print(vertex_dictionary)
 
 # all three trucks are loaded with the packages according to the special notes. Packages now in truck_cargo
@@ -158,22 +158,21 @@ truck_3.load_truck_3(package_list_trip_3)
 # print(vertex_list.index(truck_1.address_list[0]))
 
 # greedy algo: add to fucntions later
-# start_location = hub
-# print(vertex_list.index(hub))
 
-
-row_list = []
-min_row_list = []
+min_distance = 0
 for i in range(len(truck_1.address_list)):
-    row_list.clear()
     for j in range(len(truck_1.address_list)):
-        start = i # hub address is 0 in vertex list
-        next_loc = vertex_dictionary[truck_1.address_list[j]]
-        row_list.append(map_matrix[start][next_loc])
-        if len(row_list) == len(truck_1.address_list):
-            min_row_list.append(min(row_list))
+        end = vertex_dictionary[truck_1.address_list[j]]
+        if len(queue_list) == 0:
+            start = 0
+        if (map_matrix[start][end]) > min_distance:
+            min_distance = map_matrix[start][end]
+        if j == len(truck_1.address_list):
+            queue_list.append(min_distance)
+            start = map_matrix.index(min(map_matrix[start]))
+            min_distance = 0
 
-print(min_row_list)
+print(queue_list)
 
 
 
