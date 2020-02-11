@@ -140,12 +140,21 @@ vertices = [[1 for x in range(len(edges))] for e in range(len(edges))]
 
 # stores number of vetices in the vertex_list
 number_of_vertices = len(vertices[0])
-print(number_of_vertices, len(edges[0]))
 
+for element in range(number_of_vertices):
+    vertices[element][element] = 0
+
+print(vertices)
 
 # The first element of the lists inside visited_and_distance denotes if the vertex has been visited.
 # The second element of the lists inside the visited_and_distance denotes the distance from the source.
-visited_and_distance = [[0,0], [0, sys.maxsize], [0, sys.maxsize], [0, sys.maxsize]]
+# visited_and_distance = [[0,0], [0, sys.maxsize], [0, sys.maxsize], [0, sys.maxsize]]
+xyz = 0,sys.maxsize
+visited_and_distance = [[xyz for x in range(len(edges))] for e in range(len(edges))]
+for element in range(number_of_vertices):
+    new_element = 0,0
+    visited_and_distance[element][element] = new_element
+
 
 for vertex in range(number_of_vertices):
     to_visit = to_be_visited() # Finding the next vertex to be visited
@@ -162,7 +171,7 @@ i = 0
 
 # Printing out the shortest distance from the source to each vertex
 for distance in visited_and_distance:
-    print("The shortest distance of ",chr(ord('a') + i)," from th source vertex a is: ", distance[1])
+    print("The shortest distance of ",chr(ord('a') + i)," from the source vertex a is: ", distance[1])
     i = i + 1
 
 # lists of package IDs for each trip and truck. They are sorted too.
