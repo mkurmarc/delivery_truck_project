@@ -151,15 +151,15 @@ number_of_vertices = len(vertex_list)
 # The first element of the lists inside visited_and_distance denotes if the vertex has been visited.
 # The second element of the lists inside the visited_and_distance denotes the distance from the source.
 # visited_and_distance = [[0,0], [0, sys.maxsize], [0, sys.maxsize], [0, sys.maxsize]]
-xyz = 0,sys.maxsize
-visited_and_distance = [[xyz for x in range(len(edges))] for e in range(len(edges))]
-for element in range(number_of_vertices):
-    new_element = 0,0
-    visited_and_distance[element][element] = new_element
+z = [0,sys.maxsize]
+visited_and_distance = [z for i in range(number_of_vertices)]
+visited_and_distance[0] = [0,0]
 
+print(visited_and_distance)
 
 for vertex in range(number_of_vertices):
     to_visit = to_be_visited() # Finding the next vertex to be visited
+    # print(to_visit)
     for neighbor_index in range(number_of_vertices):
         # Calculating the new distance for all unvisited neighbours of the chosen vertex.
         if edges[to_visit][neighbor_index] > 0 and visited_and_distance[neighbor_index][0] == 0: # removing vertices list to check if path exists because using edges matrix is more effiecient.
@@ -175,6 +175,11 @@ i = 0
 for distance in visited_and_distance:
     print(f"The shortest distance of {vertex_list[i]} from {vertex_list[0]} is: {distance[1]}")
     i += 1
+
+print(len(visited_and_distance))
+print(len(edges))
+
+
 
 # lists of package IDs for each trip and truck. They are sorted too.
 package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
