@@ -45,6 +45,10 @@ class HashTable:
         else:
             return "No package found with that key"
 
+# create update function for hashmap
+    def update_val(self):
+        pass
+
 # This dunder method prints string representation of hash_table
     def __str__(self):
         return "".join(str(item) for item in self.hash_table)
@@ -94,7 +98,6 @@ class Truck:
 def to_be_visited():
     global visited_and_distance
     v = -10
-
     for index in range(number_of_vertices):
         if visited_and_distance[index][0] == 0 and (v < 0 or visited_and_distance[index][1] <= visited_and_distance[v][1]):
             v = index
@@ -136,15 +139,14 @@ with open('wgups_distance_table.csv', 'r') as csv_dist_file:
         edges.append(line)
 
 # uses list comprehension to create a vetices map with all 1's
-vertices = [[1 for x in range(len(edges))] for e in range(len(edges))]
+# vertices = [[1 for x in range(len(edges))] for e in range(len(edges))]
+
+
+# for element in range(number_of_vertices):
+#     vertices[element][element] = 0
 
 # stores number of vetices in the vertex_list
-number_of_vertices = len(vertices[0])
-
-for element in range(number_of_vertices):
-    vertices[element][element] = 0
-
-print(vertices)
+number_of_vertices = len(vertex_list)
 
 # The first element of the lists inside visited_and_distance denotes if the vertex has been visited.
 # The second element of the lists inside the visited_and_distance denotes the distance from the source.
@@ -160,19 +162,19 @@ for vertex in range(number_of_vertices):
     to_visit = to_be_visited() # Finding the next vertex to be visited
     for neighbor_index in range(number_of_vertices):
         # Calculating the new distance for all unvisited neighbours of the chosen vertex.
-        if vertices[to_visit][neighbor_index] == 1 and visited_and_distance[neighbor_index][0] == 0:
+        if edges[to_visit][neighbor_index] > 0 and visited_and_distance[neighbor_index][0] == 0: # removing vertices list to check if path exists because using edges matrix is more effiecient.
             new_distance = visited_and_distance[to_visit][1] + edges[to_visit][neighbor_index]
             # Updating the distance of the neighbor if its current distance is greater than the distance that has just been calculated
             if visited_and_distance[neighbor_index][1] > new_distance:
                 visited_and_distance[neighbor_index][1] = new_distance
         # Visiting the vertex found earlier
         visited_and_distance[to_visit][0] = 1
-i = 0
 
+i = 0
 # Printing out the shortest distance from the source to each vertex
 for distance in visited_and_distance:
-    print("The shortest distance of ",chr(ord('a') + i)," from the source vertex a is: ", distance[1])
-    i = i + 1
+    print(f"The shortest distance of {vertex_list[i]} from {vertex_list[0]} is: {distance[1]}")
+    i += 1
 
 # lists of package IDs for each trip and truck. They are sorted too.
 package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
