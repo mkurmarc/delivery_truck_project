@@ -94,28 +94,28 @@ class Truck:
         for i in range(len(list)):
             self.truck_cargo.append(package_list[i])
 
-# this function determines which of the unvisited nodes need ot be visited next
-def to_be_visited():
-    global visited_and_distance
-    v = -10
-    for index in range(number_of_vertices):
-        if visited_and_distance[index][0] == 0 and (v < 0 or visited_and_distance[index][1] <= visited_and_distance[v][1]):
-            v = index
-    return v
-
+def find_min(start):
+    minimum = 1000
+    for i in range(number_of_vertices):
+        if edges[start][i] < minimum and vertices[i][1] == 0:
+            minimum = edges[start][i]
+            start = i
+    total_traveled.append([minimum, start])
+    route_list.append(vertices[start][0])
+    vertices[start][1] = 1
+    return start
 
 
 ################################ Program Script Below ################################ transfer to main later
 
+route_list = []
+total_traveled = []
+
 # creates hash table with 41 buckets to avoid collisions
 hash_table = HashTable(41)
 
-# creates list of vertices aka addresses, hub address is added here
-hub = '4001 South 700 East'
-vertex_list = [hub]
-
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
-# Also, this block of code appends all street_address to empty vertex_list
+# Also, this block of code appends all street_address to empty vertices
 with open("package_file.txt") as f:
     for line in f:
         line = line.strip('\n')
@@ -125,60 +125,32 @@ with open("package_file.txt") as f:
                  'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
         hash_table.set_val(int(package_key), value)
-        if street_address not in vertex_list:
-            vertex_list.append(street_address)
+
+
 
 # creates empty map matrix to be use for distances between addresses
 edges = []
 
 # this block of code reads in the csv file of distances and appends to edges to create a matrix
-with open('wgups_distance_table.csv', 'r') as csv_dist_file:
+with open('wgups_distance_table_headers.csv', 'r') as csv_dist_file:
     csv_reader = csv.reader(csv_dist_file)
+    vertices = next(csv_reader)
     for line in csv_reader:
         line = list(map(float, line))
         edges.append(line)
 
-# uses list comprehension to create a vetices map with all 1's
-# vertices = [[1 for x in range(len(edges))] for e in range(len(edges))]
+# used list comprehension to make a list of lists with vertices/addresses and 0 in each list. 0 means not visited.
+vertices = [[index,0] for index in vertices]
 
+# stores number of vertices in the vertices
+number_of_vertices = len(vertices)
 
-# for element in range(number_of_vertices):
-#     vertices[element][element] = 0
+print(find_min(0))
 
-# stores number of vetices in the vertex_list
-number_of_vertices = len(vertex_list)
-
-# The first element of the lists inside visited_and_distance denotes if the vertex has been visited.
-# The second element of the lists inside the visited_and_distance denotes the distance from the source.
-# visited_and_distance = [[0,0], [0, sys.maxsize], [0, sys.maxsize], [0, sys.maxsize]]
-z = [0,sys.maxsize]
-visited_and_distance = [z for i in range(number_of_vertices)]
-visited_and_distance[0] = [0,0]
-
-print(visited_and_distance)
-
-for vertex in range(number_of_vertices):
-    to_visit = to_be_visited() # Finding the next vertex to be visited
-    # print(to_visit)
-    for neighbor_index in range(number_of_vertices):
-        # Calculating the new distance for all unvisited neighbours of the chosen vertex.
-        if edges[to_visit][neighbor_index] > 0 and visited_and_distance[neighbor_index][0] == 0: # removing vertices list to check if path exists because using edges matrix is more effiecient.
-            new_distance = visited_and_distance[to_visit][1] + edges[to_visit][neighbor_index]
-            # Updating the distance of the neighbor if its current distance is greater than the distance that has just been calculated
-            if visited_and_distance[neighbor_index][1] > new_distance:
-                visited_and_distance[neighbor_index][1] = new_distance
-        # Visiting the vertex found earlier
-        visited_and_distance[to_visit][0] = 1
-
-i = 0
-# Printing out the shortest distance from the source to each vertex
-for distance in visited_and_distance:
-    print(f"The shortest distance of {vertex_list[i]} from {vertex_list[0]} is: {distance[1]}")
-    i += 1
-
-print(len(visited_and_distance))
-print(len(edges))
-
+print(total_traveled, route_list)
+# print(edges)
+print(vertices)
+# print(number_of_vertices)
 
 
 # lists of package IDs for each trip and truck. They are sorted too.
@@ -199,7 +171,7 @@ truck_3 = Truck('10:20:00')
 # print(vertices)
 # print(hash_table)
 # print(edges)
-# print(vertex_list)
+# print(vertices)
 
 # all three trucks are loaded with the packages according to the special notes. Packages now in truck_cargo
 truck_1.load_truck_1(package_list_trip_1)
@@ -207,7 +179,7 @@ truck_2.load_truck_2(package_list_trip_2)
 truck_3.load_truck_3(package_list_trip_3)
 
 # print(truck_1.address_list)
-# print(vertex_list.index(truck_1.address_list[0]))
+# print(vertices.index(truck_1.address_list[0]))
 
 # Calling function calculate_time() using rate of 18 mph
 # print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
