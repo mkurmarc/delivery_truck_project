@@ -99,11 +99,11 @@ def find_min(start):
     for i in range(number_of_vertices):
         if edges[start][i] < minimum and vertices[i][1] == 0:
             minimum = edges[start][i]
-            start = i
-    total_traveled.append([minimum, start])
-    route_list.append(vertices[start][0])
+            new_v = i
+    total_traveled.append([minimum, new_v])
+    route_list.append(vertices[new_v][0])
     vertices[start][1] = 1
-    return start
+    return new_v
 
 
 ################################ Program Script Below ################################ transfer to main later
@@ -147,9 +147,11 @@ number_of_vertices = len(vertices)
 
 print(find_min(0))
 
+print(find_min(20))
+
 print(total_traveled, route_list)
 # print(edges)
-print(vertices)
+# print(vertices)
 # print(number_of_vertices)
 
 
