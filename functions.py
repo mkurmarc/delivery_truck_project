@@ -1,9 +1,8 @@
 # Marc
 from time import time
 import re
-
-def difference_list(list_1, list_2):
-    return list(set(list_1) - set(list_2))
+import sys
+import csv
 
 class HashTable:
 
@@ -45,6 +44,10 @@ class HashTable:
             return record_key, record_value
         else:
             return "No package found with that key"
+
+# create update function for hashmap
+    def update_val(self):
+        pass
 
 # This dunder method prints string representation of hash_table
     def __str__(self):
@@ -91,21 +94,71 @@ class Truck:
         for i in range(len(list)):
             self.truck_cargo.append(package_list[i])
 
+def find_min(start):
+    minimum = 1000
+    for i in range(number_of_vertices):
+        if edges[start][i] < minimum and vertices[i][1] == 0:
+            minimum = edges[start][i]
+            new_v = i
+    total_traveled.append([minimum, new_v])
+    route_list.append(vertices[new_v][0])
+    vertices[start][1] = 1
+    return new_v
+
 
 ################################ Program Script Below ################################ transfer to main later
+
+route_list = []
+total_traveled = []
 
 # creates hash table with 41 buckets to avoid collisions
 hash_table = HashTable(41)
 
-# creates list of vertices aka addresses, hub address is added here
-hub = '4001 South 700 East'
-vertex_list = [hub]
+# This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
+# Also, this block of code appends all street_address to empty vertices
+with open("package_file.txt") as f:
+    for line in f:
+        line = line.strip('\n')
+        package_key, street_address, city, state, zip_code, delivery_deadline, weight, special_note = line.split(",")
+        delivery_status = 'hub'
+        value = {'delivery_address':street_address, 'city':city,
+                 'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
+                 'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
+        hash_table.set_val(int(package_key), value)
+
+
 
 # creates empty map matrix to be use for distances between addresses
-map_matrix = []
+edges = []
 
-# creates empty queue list. This will store each trucks path/route
-queue_list = []
+# this block of code reads in the csv file of distances and appends to edges to create a matrix
+with open('wgups_distance_table_headers.csv', 'r') as csv_dist_file:
+    csv_reader = csv.reader(csv_dist_file)
+    vertices = next(csv_reader)
+    for line in csv_reader:
+        line = list(map(float, line))
+        edges.append(line)
+
+# used list comprehension to make a list of lists with vertices/addresses and 0 in each list. 0 means not visited.
+vertices = [[index,0] for index in vertices]
+
+# stores number of vertices in the vertices
+number_of_vertices = len(vertices)
+
+
+while len(total_traveled) < number_of_vertices - 1:
+    if len(total_traveled) == 0:
+        next_dest = find_min(0)
+    next_dest = find_min(next_dest)
+
+print(len(total_traveled))
+
+print(total_traveled)
+print(route_list)
+# print(edges)
+print(vertices)
+# print(number_of_vertices)
+
 
 # lists of package IDs for each trip and truck. They are sorted too.
 package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
@@ -122,56 +175,18 @@ truck_1 = Truck('08:00:00')
 truck_2 = Truck('09:05:00')
 truck_3 = Truck('10:20:00')
 
-# This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
-# Also, this block of code appends all street_address to empty vertex_list
-with open("package_file.txt") as f:
-    for line in f:
-        line = line.strip('\n')
-        package_key, street_address, city, state, zip_code, delivery_deadline, weight, special_note = line.split(",")
-        delivery_status = 'hub'
-        value = {'delivery_address':street_address, 'city':city,
-                 'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
-                 'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
-        hash_table.set_val(int(package_key), value)
-        if street_address not in vertex_list:
-            vertex_list.append(street_address)
-
-# this reads distance file line by line and fills the empty map matrix . There are only 27 unique addresses
-with open("wgups_distance_table.txt") as f:
-    for line in f:
-        line = line.strip('\n')
-        row = line.split(" ")
-        item = line.split(",")
-        map_matrix.append(item)
-
+# print(vertices)
 # print(hash_table)
-# print(map_matrix)
-print(vertex_list)
+# print(edges)
+# print(vertices)
 
 # all three trucks are loaded with the packages according to the special notes. Packages now in truck_cargo
 truck_1.load_truck_1(package_list_trip_1)
 truck_2.load_truck_2(package_list_trip_2)
 truck_3.load_truck_3(package_list_trip_3)
 
-print(truck_1.address_list)
-# print(vertex_list.index(truck_1.address_list[0]))
-
-# greedy algo: add to fucntions later
-# start_location = hub
-# print(vertex_list.index(hub))
-
-
-
-for i in range(len(truck_1.address_list)):
-    for j in range(len(truck_1.address_list)):
-        start = vertex_list.index(vertex_list[i]) # hub address is 0 in vertex list
-        next_loc = vertex_list.index(truck_1.address_list[j])
-        current_distance = map_matrix[start][next_loc]
-
-        # start = vertex_list.index(truck_1.address_list[i])
-        # min_distance = map_matrix[start_loc][j]
-
-
+# print(truck_1.address_list)
+# print(vertices.index(truck_1.address_list[0]))
 
 # Calling function calculate_time() using rate of 18 mph
 # print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
