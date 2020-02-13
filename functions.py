@@ -150,9 +150,13 @@ while len(total_traveled) < number_of_vertices - 1:
     if len(total_traveled) == 0:
         next_dest = find_min(0)
     next_dest = find_min(next_dest)
+    if len(total_traveled) == number_of_vertices -1:
+        edges[next_dest][] # this line return last index to hub
 
+print(edges[10][0])
+print(number_of_vertices)
 print(len(total_traveled))
-
+print(len(route_list))
 print(total_traveled)
 print(route_list)
 # print(edges)
