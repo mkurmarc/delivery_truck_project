@@ -145,13 +145,18 @@ vertices = [[index,0] for index in vertices]
 # stores number of vertices in the vertices
 number_of_vertices = len(vertices)
 
-print(find_min(0))
 
-print(find_min(20))
+while len(total_traveled) < number_of_vertices - 1:
+    if len(total_traveled) == 0:
+        next_dest = find_min(0)
+    next_dest = find_min(next_dest)
 
-print(total_traveled, route_list)
+print(len(total_traveled))
+
+print(total_traveled)
+print(route_list)
 # print(edges)
-# print(vertices)
+print(vertices)
 # print(number_of_vertices)
 
 
