@@ -61,6 +61,10 @@ class Truck:
         self.truck_cargo = []
         self.address_list = []
 
+    def __eq__(self, other):
+        pass
+
+
     def __str__(self):
         return (f"Truck's cargo includes {self.truck_cargo}\nTruck left from hub at {self.start_time}\
                 \nTotal time is {self.acc_time}") # use total time to mark packages on board as either in transit, delivered, or at hub
@@ -83,6 +87,7 @@ class Truck:
             package_id, package_info = truck_1.truck_cargo[i]
             self.address_list.append(package_info['delivery_address'])
 
+
     def load_truck_2(self, list):
         package_list = list
         for i in range(len(list)):
@@ -95,6 +100,7 @@ class Truck:
 
 def find_min_distance(start):
     minimum = 1000
+    global new_v
     for i in range(number_of_vertices):
         if edges[start][i] < minimum and vertices[i][1] == 0:
             minimum = edges[start][i]
@@ -104,12 +110,12 @@ def find_min_distance(start):
     vertices[start][1] = 1
     return new_v
 
-def find_create_minimum_route():
-    while len(total_traveled) < number_of_vertices - 1:
+def find_create_minimum_route(start):
+    while len(total_traveled) < len(truck_1_address_list):
         if len(total_traveled) == 0:
-            next_dest = find_min_distance(0)
+            next_dest = find_min_distance(start)
         next_dest = find_min_distance(next_dest)
-        if len(total_traveled) == number_of_vertices -1:
+        if len(total_traveled) == len(truck_1_address_list):
             total_traveled.append([edges[next_dest][0],0]) # this line return last index to hub
             route_list.append([vertices[0][0],0])
             vertices[next_dest][1] = 1
@@ -118,6 +124,7 @@ def change_del_status_to_1(vertices_list, package_address_list):
     for i in range(number_of_vertices):
         if vertices_list[i][0] not in package_address_list:
             vertices_list[i][1] = 1
+    vertices_list[0][1] = 0
 
 def reset_del_status(vertices_list, package_address_list):
     for i in range(number_of_vertices):
@@ -174,33 +181,27 @@ number_of_vertices = len(vertices)
 #         route_list.append([vertices[0][0],0])
 #         vertices[next_dest][1] = 1
 
-find_create_minimum_route()
+# find_create_minimum_route()
 
 # print(vertices)
 # print(len(total_traveled))
 # print("\n")
 # print(len(route_list))
-print(total_traveled)
-print('\n')
-print(route_list)
+# print(total_traveled)
+# print('\n')
+# print(route_list)
 # print("\n")
 # print(edges)
 
-
-
-
 # this prints the matrix in a more readable format
-# for k in range(len(edges)):
-#     print(f"{k}  {edges[k]} \n")
+for k in range(len(edges)):
+    print(f"{k}  {edges[k]} \n")
 
 # this prints the sum of route
 # sum = 0
 # for i in range(len(total_traveled)):
 #     sum += total_traveled[i][0]
 # print(sum)
-
-# print(number_of_vertices)
-
 
 # lists of package IDs for each trip and truck. They are sorted too.
 package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
@@ -222,23 +223,32 @@ truck_1.load_truck_1(package_list_trip_1)
 truck_2.load_truck_2(package_list_trip_2)
 truck_3.load_truck_3(package_list_trip_3)
 
+print(truck_1.address_list)
+print('\n')
+truck_1_address_list = truck_1.address_list
+truck_1_address_list = list(set(truck_1_address_list))
+print(truck_1_address_list)
+print('\n')
 # print('\nchange to 1:')
-# change_del_status_to_1(vertices, truck_1.address_list)
+change_del_status_to_1(vertices, truck_1_address_list)
+print("\n\n", vertices)
+find_create_minimum_route(0)
+print('\n')
+print(total_traveled)
+print('\n')
+print(route_list)
+
 # print(vertices)
 # print("\nreset to 0")
 # reset_del_status(vertices, truck_1.address_list)
 # print(vertices)
 
+
+
 # print(vertices)
 # print(hash_table)
 # print(edges)
 # print(vertices)
-
-
-
-# print('\n')
-# print(truck_1.address_list)
-# print(vertices.index(truck_1.address_list[0]))
 
 # Calling function calculate_time() using rate of 18 mph
 # print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
