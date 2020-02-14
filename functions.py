@@ -1,7 +1,6 @@
 # Marc
 from time import time
 import re
-import sys
 import csv
 
 class HashTable:
@@ -94,7 +93,7 @@ class Truck:
         for i in range(len(list)):
             self.truck_cargo.append(package_list[i])
 
-def find_min(start):
+def find_min_distance(start):
     minimum = 1000
     for i in range(number_of_vertices):
         if edges[start][i] < minimum and vertices[i][1] == 0:
@@ -104,6 +103,16 @@ def find_min(start):
     route_list.append([vertices[new_v][0], new_v])
     vertices[start][1] = 1
     return new_v
+
+def find_create_minimum_route():
+    while len(total_traveled) < number_of_vertices - 1:
+        if len(total_traveled) == 0:
+            next_dest = find_min_distance(0)
+        next_dest = find_min_distance(next_dest)
+        if len(total_traveled) == number_of_vertices -1:
+            total_traveled.append([edges[next_dest][0],0]) # this line return last index to hub
+            route_list.append([vertices[0][0],0])
+            vertices[next_dest][1] = 1
 
 def change_del_status_to_1(vertices_list, package_address_list):
     for i in range(number_of_vertices):
@@ -158,19 +167,22 @@ number_of_vertices = len(vertices)
 # this block determines the shortest route and appends to two lists to keep track of route, indices, and distances
 # while len(total_traveled) < number_of_vertices - 1:
 #     if len(total_traveled) == 0:
-#         next_dest = find_min(0)
-#     next_dest = find_min(next_dest)
+#         next_dest = find_min_distance(0)
+#     next_dest = find_min_distance(next_dest)
 #     if len(total_traveled) == number_of_vertices -1:
 #         total_traveled.append([edges[next_dest][0],0]) # this line return last index to hub
 #         route_list.append([vertices[0][0],0])
 #         vertices[next_dest][1] = 1
 
-print(vertices)
+find_create_minimum_route()
+
+# print(vertices)
 # print(len(total_traveled))
+# print("\n")
 # print(len(route_list))
-# print(total_traveled)
-# print('\n')
-# print(route_list)
+print(total_traveled)
+print('\n')
+print(route_list)
 # print("\n")
 # print(edges)
 
@@ -210,12 +222,12 @@ truck_1.load_truck_1(package_list_trip_1)
 truck_2.load_truck_2(package_list_trip_2)
 truck_3.load_truck_3(package_list_trip_3)
 
-print('\nchange to 1:')
-change_del_status_to_1(vertices, truck_1.address_list)
-print(vertices)
-print("\nreset to 0")
-reset_del_status(vertices, truck_1.address_list)
-print(vertices)
+# print('\nchange to 1:')
+# change_del_status_to_1(vertices, truck_1.address_list)
+# print(vertices)
+# print("\nreset to 0")
+# reset_del_status(vertices, truck_1.address_list)
+# print(vertices)
 
 # print(vertices)
 # print(hash_table)
