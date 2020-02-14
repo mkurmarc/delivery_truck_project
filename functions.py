@@ -105,14 +105,15 @@ def find_min(start):
     vertices[start][1] = 1
     return new_v
 
-def change_delivery_status(number, vertices_list, package_address_list):
-    # print(vertices_list[0][0])
-    # print('\n')
-    # print(package_address_list[0])
+def change_del_status_to_1(vertices_list, package_address_list):
     for i in range(number_of_vertices):
-        for k in range(len(package_address_list)):
-            if package_address_list[k] == vertices_list[i][0]:
-                vertices_list[i][1] = number
+        if vertices_list[i][0] not in package_address_list:
+            vertices_list[i][1] = 1
+
+def reset_del_status(vertices_list, package_address_list):
+    for i in range(number_of_vertices):
+        vertices_list[i][1] = 0
+
 
 ################################ Program Script Below ################################ transfer to main later
 
@@ -155,14 +156,14 @@ number_of_vertices = len(vertices)
 
 
 # this block determines the shortest route and appends to two lists to keep track of route, indices, and distances
-while len(total_traveled) < number_of_vertices - 1:
-    if len(total_traveled) == 0:
-        next_dest = find_min(0)
-    next_dest = find_min(next_dest)
-    if len(total_traveled) == number_of_vertices -1:
-        total_traveled.append([edges[next_dest][0],0]) # this line return last index to hub
-        route_list.append([vertices[0][0],0])
-        vertices[next_dest][1] = 1
+# while len(total_traveled) < number_of_vertices - 1:
+#     if len(total_traveled) == 0:
+#         next_dest = find_min(0)
+#     next_dest = find_min(next_dest)
+#     if len(total_traveled) == number_of_vertices -1:
+#         total_traveled.append([edges[next_dest][0],0]) # this line return last index to hub
+#         route_list.append([vertices[0][0],0])
+#         vertices[next_dest][1] = 1
 
 print(vertices)
 # print(len(total_traveled))
@@ -209,9 +210,11 @@ truck_1.load_truck_1(package_list_trip_1)
 truck_2.load_truck_2(package_list_trip_2)
 truck_3.load_truck_3(package_list_trip_3)
 
-print('\n')
-change_delivery_status(0, vertices, truck_1.address_list)
-print("\n")
+print('\nchange to 1:')
+change_del_status_to_1(vertices, truck_1.address_list)
+print(vertices)
+print("\nreset to 0")
+reset_del_status(vertices, truck_1.address_list)
 print(vertices)
 
 # print(vertices)
@@ -221,8 +224,8 @@ print(vertices)
 
 
 
-print('\n')
-print(truck_1.address_list)
+# print('\n')
+# print(truck_1.address_list)
 # print(vertices.index(truck_1.address_list[0]))
 
 # Calling function calculate_time() using rate of 18 mph
