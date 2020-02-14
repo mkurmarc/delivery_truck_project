@@ -80,24 +80,27 @@ class Truck:
 # These methods load packages from hash map to the truck_cargo of truck object, and
 # loads the addresses to the address_list. The 1,2,3 means the 1st, 2nd, or 3rd trip.
 # It is going to take a toal of three truck routes/trips to deliver all the packages
-    def load_truck_1(self, list):
+    def load_truck(self, list):
         package_list = list
-        address_list_1 = []
         for i in range(len(list)):
             self.truck_cargo.append(hash_table.get_val(package_list[i]))
             package_id, package_info = truck_1.truck_cargo[i]
-            address_list_1.append(package_info['delivery_address'])
-        self.address_list = address_list_1
+            self.address_list.append(package_info['delivery_address'])
 
-    def load_truck_2(self, list):
-        package_list = list
-        for i in range(len(list)):
-            self.truck_cargo.append(package_list[i])
 
-    def load_truck_3(self, list):
-        package_list = list
-        for i in range(len(list)):
-            self.truck_cargo.append(package_list[i])
+    # def load_truck_2(self, list):
+    #     package_list = list
+    #     for i in range(len(list)):
+    #         self.truck_cargo.append(hash_table.get_val(package_list[i]))
+    #         package_id, package_info = truck_1.truck_cargo[i]
+    #         self.address_list.append(package_info['delivery_address'])
+    #
+    # def load_truck_3(self, list):
+    #     package_list = list
+    #     for i in range(len(list)):
+    #         self.truck_cargo.append(hash_table.get_val(package_list[i]))
+    #         package_id, package_info = truck_1.truck_cargo[i]
+    #         self.address_list.append(package_info['delivery_address'])
 
 def find_min_distance(start):
     minimum = 1000
@@ -194,26 +197,24 @@ total_traveled = []
 # this prints the sum of route
 
 
-# lists of package IDs for each trip and truck. They are sorted too.
+# lists of package IDs for each trip and truck according to the special notes
 package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
-# package_list_trip_1 = sorted(package_list_trip_1)
-
 package_list_trip_2 = [31, 32, 37, 38, 5, 3, 18, 36, 6, 25, 26, 28, 2, 33, 27, 35]
-# package_list_trip_2 = sorted(package_list_trip_2)
-
 package_list_trip_3 = [9, 10, 11, 12, 17, 22, 23, 24]
-# package_list_trip_3 = sorted(package_list_trip_3)
 
 # create truck objects
 truck_1 = Truck('08:00:00')
 truck_2 = Truck('09:05:00')
 truck_3 = Truck('10:20:00')
 
-# all three trucks are loaded with the packages according to the special notes. Packages now in truck_cargo
-truck_1.load_truck_1(package_list_trip_1)
-truck_2.load_truck_2(package_list_trip_2)
-truck_3.load_truck_3(package_list_trip_3)
-
+# all three trucks are loaded with the packages. Packages now in truck_cargo
+truck_1.load_truck(package_list_trip_1)
+truck_2.load_truck(package_list_trip_2)
+truck_3.load_truck(package_list_trip_3)
+print(truck_2.address_list)
+print('\n')
+print(truck_3.address_list)
+print('\n')
 # these two lines of code remove duplicate addresses from the delivery address list
 truck_1_address_list = truck_1.address_list
 truck_1_address_list = list(set(truck_1_address_list))
