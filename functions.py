@@ -101,10 +101,18 @@ def find_min(start):
             minimum = edges[start][i]
             new_v = i
     total_traveled.append([minimum, new_v])
-    route_list.append(vertices[new_v][0])
+    route_list.append([vertices[new_v][0], new_v])
     vertices[start][1] = 1
     return new_v
 
+def change_delivery_status(number, vertices_list, package_address_list):
+    # print(vertices_list[0][0])
+    # print('\n')
+    # print(package_address_list[0])
+    for i in range(number_of_vertices):
+        for k in range(len(package_address_list)):
+            if package_address_list[k] == vertices_list[i][0]:
+                vertices_list[i][1] = number
 
 ################################ Program Script Below ################################ transfer to main later
 
@@ -115,7 +123,6 @@ total_traveled = []
 hash_table = HashTable(41)
 
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
-# Also, this block of code appends all street_address to empty vertices
 with open("package_file.txt") as f:
     for line in f:
         line = line.strip('\n')
@@ -146,21 +153,39 @@ vertices = [[index,0] for index in vertices]
 number_of_vertices = len(vertices)
 
 
+
+# this block determines the shortest route and appends to two lists to keep track of route, indices, and distances
 while len(total_traveled) < number_of_vertices - 1:
     if len(total_traveled) == 0:
         next_dest = find_min(0)
     next_dest = find_min(next_dest)
     if len(total_traveled) == number_of_vertices -1:
-        edges[next_dest][] # this line return last index to hub
+        total_traveled.append([edges[next_dest][0],0]) # this line return last index to hub
+        route_list.append([vertices[0][0],0])
+        vertices[next_dest][1] = 1
 
-print(edges[10][0])
-print(number_of_vertices)
-print(len(total_traveled))
-print(len(route_list))
-print(total_traveled)
-print(route_list)
-# print(edges)
 print(vertices)
+# print(len(total_traveled))
+# print(len(route_list))
+# print(total_traveled)
+# print('\n')
+# print(route_list)
+# print("\n")
+# print(edges)
+
+
+
+
+# this prints the matrix in a more readable format
+# for k in range(len(edges)):
+#     print(f"{k}  {edges[k]} \n")
+
+# this prints the sum of route
+# sum = 0
+# for i in range(len(total_traveled)):
+#     sum += total_traveled[i][0]
+# print(sum)
+
 # print(number_of_vertices)
 
 
@@ -179,17 +204,25 @@ truck_1 = Truck('08:00:00')
 truck_2 = Truck('09:05:00')
 truck_3 = Truck('10:20:00')
 
-# print(vertices)
-# print(hash_table)
-# print(edges)
-# print(vertices)
-
 # all three trucks are loaded with the packages according to the special notes. Packages now in truck_cargo
 truck_1.load_truck_1(package_list_trip_1)
 truck_2.load_truck_2(package_list_trip_2)
 truck_3.load_truck_3(package_list_trip_3)
 
-# print(truck_1.address_list)
+print('\n')
+change_delivery_status(0, vertices, truck_1.address_list)
+print("\n")
+print(vertices)
+
+# print(vertices)
+# print(hash_table)
+# print(edges)
+# print(vertices)
+
+
+
+print('\n')
+print(truck_1.address_list)
 # print(vertices.index(truck_1.address_list[0]))
 
 # Calling function calculate_time() using rate of 18 mph
