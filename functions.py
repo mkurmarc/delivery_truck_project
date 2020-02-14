@@ -82,11 +82,12 @@ class Truck:
 # It is going to take a toal of three truck routes/trips to deliver all the packages
     def load_truck_1(self, list):
         package_list = list
+        address_list_1 = []
         for i in range(len(list)):
             self.truck_cargo.append(hash_table.get_val(package_list[i]))
             package_id, package_info = truck_1.truck_cargo[i]
-            self.address_list.append(package_info['delivery_address'])
-
+            address_list_1.append(package_info['delivery_address'])
+        self.address_list = address_list_1
 
     def load_truck_2(self, list):
         package_list = list
@@ -110,15 +111,21 @@ def find_min_distance(start):
     vertices[start][1] = 1
     return new_v
 
-def find_create_minimum_route(start):
-    while len(total_traveled) < len(truck_1_address_list):
+def find_create_minimum_route(start, address_list_size):
+    while len(total_traveled) < address_list_size:
         if len(total_traveled) == 0:
             next_dest = find_min_distance(start)
         next_dest = find_min_distance(next_dest)
-        if len(total_traveled) == len(truck_1_address_list):
+        if len(total_traveled) == address_list_size:
             total_traveled.append([edges[next_dest][0],0]) # this line return last index to hub
             route_list.append([vertices[0][0],0])
             vertices[next_dest][1] = 1
+
+def sum_of_route():
+    sum = 0
+    for i in range(len(total_traveled)):
+        sum += total_traveled[i][0]
+    return sum
 
 def change_del_status_to_1(vertices_list, package_address_list):
     for i in range(number_of_vertices):
@@ -133,9 +140,6 @@ def reset_del_status(vertices_list, package_address_list):
 
 ################################ Program Script Below ################################ transfer to main later
 
-route_list = []
-total_traveled = []
-
 # creates hash table with 41 buckets to avoid collisions
 hash_table = HashTable(41)
 
@@ -149,8 +153,6 @@ with open("package_file.txt") as f:
                  'state':state, 'zip_code':zip_code, 'delivery_deadline':delivery_deadline,
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
         hash_table.set_val(int(package_key), value)
-
-
 
 # creates empty map matrix to be use for distances between addresses
 edges = []
@@ -169,19 +171,11 @@ vertices = [[index,0] for index in vertices]
 # stores number of vertices in the vertices
 number_of_vertices = len(vertices)
 
+# empty list for address, index of address on matrix. This will show the path froma address to address
+route_list = []
 
-
-# this block determines the shortest route and appends to two lists to keep track of route, indices, and distances
-# while len(total_traveled) < number_of_vertices - 1:
-#     if len(total_traveled) == 0:
-#         next_dest = find_min_distance(0)
-#     next_dest = find_min_distance(next_dest)
-#     if len(total_traveled) == number_of_vertices -1:
-#         total_traveled.append([edges[next_dest][0],0]) # this line return last index to hub
-#         route_list.append([vertices[0][0],0])
-#         vertices[next_dest][1] = 1
-
-# find_create_minimum_route()
+# empty list for distance traveled between points, index traveled to
+total_traveled = []
 
 # print(vertices)
 # print(len(total_traveled))
@@ -194,24 +188,21 @@ number_of_vertices = len(vertices)
 # print(edges)
 
 # this prints the matrix in a more readable format
-for k in range(len(edges)):
-    print(f"{k}  {edges[k]} \n")
+# for k in range(len(edges)):
+#     print(f"{k}  {edges[k]} \n")
 
 # this prints the sum of route
-# sum = 0
-# for i in range(len(total_traveled)):
-#     sum += total_traveled[i][0]
-# print(sum)
+
 
 # lists of package IDs for each trip and truck. They are sorted too.
 package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
-package_list_trip_1 = sorted(package_list_trip_1)
+# package_list_trip_1 = sorted(package_list_trip_1)
 
 package_list_trip_2 = [31, 32, 37, 38, 5, 3, 18, 36, 6, 25, 26, 28, 2, 33, 27, 35]
-package_list_trip_2 = sorted(package_list_trip_2)
+# package_list_trip_2 = sorted(package_list_trip_2)
 
 package_list_trip_3 = [9, 10, 11, 12, 17, 22, 23, 24]
-package_list_trip_3 = sorted(package_list_trip_3)
+# package_list_trip_3 = sorted(package_list_trip_3)
 
 # create truck objects
 truck_1 = Truck('08:00:00')
@@ -223,20 +214,20 @@ truck_1.load_truck_1(package_list_trip_1)
 truck_2.load_truck_2(package_list_trip_2)
 truck_3.load_truck_3(package_list_trip_3)
 
-print(truck_1.address_list)
-print('\n')
+# these two lines of code remove duplicate addresses from the delivery address list
 truck_1_address_list = truck_1.address_list
 truck_1_address_list = list(set(truck_1_address_list))
-print(truck_1_address_list)
-print('\n')
+truck_1_address_list_size = len(truck_1_address_list)
 # print('\nchange to 1:')
 change_del_status_to_1(vertices, truck_1_address_list)
-print("\n\n", vertices)
-find_create_minimum_route(0)
+print(vertices)
+find_create_minimum_route(0, truck_1_address_list_size)
 print('\n')
 print(total_traveled)
 print('\n')
 print(route_list)
+print('\n')
+print(sum_of_route())
 
 # print(vertices)
 # print("\nreset to 0")
