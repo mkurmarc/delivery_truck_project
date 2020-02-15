@@ -155,11 +155,11 @@ vertices = [[index,0] for index in vertices]
 # stores number of vertices in the vertices
 number_of_vertices = len(vertices)
 
-# empty list for address, index of address on matrix. This will show the path froma address to address
+# three empty lists for address, index of address on matrix. This will show the path from address to address for each truck
 route_list_1 = []
 route_list_2 = []
 route_list_3 = []
-# empty list for distance traveled between points, index traveled to
+# three empty lists for distance traveled between points, index traveled to for each truck
 total_traveled_1 = []
 total_traveled_2 = []
 total_traveled_3 = []
@@ -178,82 +178,68 @@ truck_1 = Truck('08:00:00')
 truck_2 = Truck('09:05:00')
 truck_3 = Truck('10:20:00')
 
-# all three trucks are loaded with the packages. Packages now in truck_cargo
+# truck 1 is loaded with the packages. Packages now in truck_cargo
 truck_1.load_truck(package_list_trip_1)
 
 # these two lines of code remove duplicate addresses from the truck_1 address list
 truck_1_address_list = truck_1.address_list
-# print(truck_1_address_list,'\n')
 truck_1_address_list = list(set(truck_1_address_list))
-# print(truck_1_address_list,'\n')
-
 # saves size of non-duplicate list
 truck_1_address_list_size = len(truck_1_address_list)
-
 # below this changes vertices that are not in the truck_1_address_list to visited aka 1
 change_del_status_to_1(vertices, truck_1_address_list)
-
 # below this finds the minimum distance route using Nearest Neighbor technique
 find_create_minimum_route(0, truck_1_address_list_size, route_list_1, total_traveled_1)
-
 # below this resets all vertices to unvisited aka 0
 reset_del_status()
-
 # code block saves the sum of truck_1 route, its address route, and distance traveled between each index/address
 truck_1_total_dist = sum_of_route(total_traveled_1)
 
-# # print(vertices,'\n')
-# truck_2.load_truck(package_list_trip_2)
-#
-# truck_2_address_list = truck_2.address_list
-# # print(truck_2_address_list,'\n')
-# truck_2_address_list = list(set(truck_2_address_list))
-# print(truck_2_address_list)
-# truck_2_address_list_size = len(truck_2_address_list)
-# # print('\n', truck_2_address_list_size)
-# # below this changes vertices that are not in the truck_1_address_list to visited aka 1
-# change_del_status_to_1(vertices, truck_2_address_list)
-# # print('\n',vertices)
-# # below this finds the minimum distance route using Nearest Neighbor technique
-# find_create_minimum_route(0, (truck_2_address_list_size))
-# # below this resets all vertices to unvisited aka 0
-# reset_del_status()
-# # code block saves the sum of truck_2 route, its address route, and distance traveled between each index/address
-# truck_2_address_route = route_list
-# truck_2_route_miles = total_traveled
-# truck_2_total_dist = sum_of_route()
-# route_list.clear()
-# total_traveled.clear()
-#
-#
-# truck_3.load_truck(package_list_trip_3)
-#
-# truck_3_address_list = truck_3.address_list
-# truck_3_address_list = list(set(truck_3_address_list))
-#
-# truck_3_address_list_size = len(truck_3_address_list)
-# # below this chang  es vertices that are not in the truck_1_address_list to visited aka 1
-# change_del_status_to_1(vertices, truck_3_address_list)
-# # below this finds the minimum distance route using Nearest Neighbor technique
-# find_create_minimum_route(0, truck_3_address_list_size)
-# # below this resets all vertices to unvisited aka 0
-# reset_del_status()
-# # code block saves the sum of truck_3 route, its address route, and distance traveled between each index/address
-# truck_3_address_route = route_list
-# truck_3_route_miles = total_traveled
-# truck_3_total_dist = sum_of_route()
+# truck 2 is loaded with the packages. Packages now in truck_cargo
+truck_2.load_truck(package_list_trip_2)
+# these two lines of code remove duplicate addresses from the truck_2 address list
+truck_2_address_list = truck_2.address_list
+truck_2_address_list = list(set(truck_2_address_list))
+# saves size of non-duplicate list
+truck_2_address_list_size = len(truck_2_address_list)
+# below this changes vertices that are not in the truck_1_address_list to visited aka 1
+change_del_status_to_1(vertices, truck_2_address_list)
+# below this finds the minimum distance route using Nearest Neighbor technique
+find_create_minimum_route(0, truck_2_address_list_size, route_list_2, total_traveled_2)
+# below this resets all vertices to unvisited aka 0
+reset_del_status()
+# sum of the route
+truck_2_total_dist = sum_of_route(total_traveled_2)
 
-print(route_list_1,'\n')
-print(total_traveled_1,'\n')
-print(truck_1_total_dist,'\n\n')
-# print(truck_2_address_route,'\n')
-# print(truck_2_route_miles,'\n')
+# truck 3 is loaded with the packages. Packages now in truck_cargo
+truck_3.load_truck(package_list_trip_3)
+# these two lines of code remove duplicate addresses from the truck_2 address list
+truck_3_address_list = truck_3.address_list
+truck_3_address_list = list(set(truck_3_address_list))
+# saves size of non-duplicate list
+truck_3_address_list_size = len(truck_3_address_list)
+# below this chang es vertices that are not in the truck_3_address_list to visited aka 1
+change_del_status_to_1(vertices, truck_3_address_list)
+# below this finds the minimum distance route using Nearest Neighbor technique
+find_create_minimum_route(0, truck_3_address_list_size,route_list_3, total_traveled_3)
+# below this resets all vertices to unvisited aka 0
+reset_del_status()
+# sum of the route
+truck_3_total_dist = sum_of_route(total_traveled_3)
+
+# this is the total distance of all three truck routes
+distance_of_routes = round(truck_1_total_dist + truck_2_total_dist + truck_3_total_dist, 2)
+
+# print(route_list_1,'\n')
+# print(total_traveled_1,'\n')
+# print(truck_1_total_dist,'\n\n')
+# print(route_list_2,'\n')
+# print(total_traveled_2,'\n')
 # print(truck_2_total_dist,'\n\n')
-#
-# print(truck_3_address_route,'\n')
-# print(truck_3_route_miles,'\n')
+# print(route_list_3,'\n')
+# print(total_traveled_3,'\n')
 # print(truck_3_total_dist,'\n')
 
-# print(truck_1_total_dist + truck_2_total_dist + truck_3_total_dist)
+print(distance_of_routes)
 # Calling function calculate_time() using rate of 18 mph
 # print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
