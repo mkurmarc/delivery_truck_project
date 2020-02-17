@@ -57,7 +57,7 @@ class Truck:
 
     def __init__(self, s_time):
         self.start_time = s_time
-        self.acc_time = s_time
+        self.acc_time = []
         self.truck_cargo = []
         self.address_list = []
 
@@ -66,12 +66,12 @@ class Truck:
                 \nTotal time is {self.acc_time}") # use total time to mark packages on board as either in transit, delivered, or at hub
 
 # function to calculate time given distance and speed. Time = Distance / Speed
-    def calculate_time(self, distance, speed):
-        float_time = distance/speed
-        time_in_seconds = float_time * 60 * 60
-        minutes, seconds = divmod(time_in_seconds, 60)
-        hours, minutes = divmod(minutes, 60)
-        return "%02d:%02d:%02d" % (hours, minutes, seconds)
+    # def calculate_time(self, distance, speed):
+    #     float_time = distance/speed
+    #     time_in_seconds = float_time * 60 * 60
+    #     minutes, seconds = divmod(time_in_seconds, 60)
+    #     hours, minutes = divmod(minutes, 60)
+    #     return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
 # These methods load packages from hash map to the truck_cargo of truck object, and
 # loads the addresses to the address_list. The 1,2,3 means the 1st, 2nd, or 3rd trip.
@@ -121,6 +121,13 @@ def reset_del_status():
     for i in range(number_of_vertices):
         vertices[i][1] = 0
 
+def calculate_time(distance):
+    speed = 18
+    float_time = distance/speed
+    time_in_seconds = float_time * 60 * 60
+    minutes, seconds = divmod(time_in_seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
 ################################ Program Script Below ################################ transfer to main later
 
@@ -180,7 +187,6 @@ truck_3 = Truck('10:20:00')
 
 # truck 1 is loaded with the packages. Packages now in truck_cargo
 truck_1.load_truck(package_list_trip_1)
-
 # these two lines of code remove duplicate addresses from the truck_1 address list
 truck_1_address_list = truck_1.address_list
 truck_1_address_list = list(set(truck_1_address_list))
@@ -195,36 +201,24 @@ reset_del_status()
 # code block saves the sum of truck_1 route, its address route, and distance traveled between each index/address
 truck_1_total_dist = sum_of_route(total_traveled_1)
 
-# truck 2 is loaded with the packages. Packages now in truck_cargo
+# similar to block of code above but the truck object and lists are different
 truck_2.load_truck(package_list_trip_2)
-# these two lines of code remove duplicate addresses from the truck_2 address list
 truck_2_address_list = truck_2.address_list
 truck_2_address_list = list(set(truck_2_address_list))
-# saves size of non-duplicate list
 truck_2_address_list_size = len(truck_2_address_list)
-# below this changes vertices that are not in the truck_1_address_list to visited aka 1
 change_del_status_to_1(vertices, truck_2_address_list)
-# below this finds the minimum distance route using Nearest Neighbor technique
 find_create_minimum_route(0, truck_2_address_list_size, route_list_2, total_traveled_2)
-# below this resets all vertices to unvisited aka 0
 reset_del_status()
-# sum of the route
 truck_2_total_dist = sum_of_route(total_traveled_2)
 
-# truck 3 is loaded with the packages. Packages now in truck_cargo
+# similar to block of code above but the truck object and lists are different
 truck_3.load_truck(package_list_trip_3)
-# these two lines of code remove duplicate addresses from the truck_2 address list
 truck_3_address_list = truck_3.address_list
 truck_3_address_list = list(set(truck_3_address_list))
-# saves size of non-duplicate list
 truck_3_address_list_size = len(truck_3_address_list)
-# below this chang es vertices that are not in the truck_3_address_list to visited aka 1
 change_del_status_to_1(vertices, truck_3_address_list)
-# below this finds the minimum distance route using Nearest Neighbor technique
 find_create_minimum_route(0, truck_3_address_list_size,route_list_3, total_traveled_3)
-# below this resets all vertices to unvisited aka 0
 reset_del_status()
-# sum of the route
 truck_3_total_dist = sum_of_route(total_traveled_3)
 
 # this is the total distance of all three truck routes
@@ -240,6 +234,20 @@ distance_of_routes = round(truck_1_total_dist + truck_2_total_dist + truck_3_tot
 # print(total_traveled_3,'\n')
 # print(truck_3_total_dist,'\n')
 
-print(distance_of_routes)
+# print(distance_of_routes)
 # Calling function calculate_time() using rate of 18 mph
 # print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
+
+# Block of code create user menu to intereact with the program
+# user_input = ""
+# while user_input != 'exit':
+#     print("To see the delivery status of packages at any given time, please enter the time in HH:MM:SS format.\
+# To exit the application, please enter 'exit'")
+#     pattern = re.compile(r'\d\d:\d\d:\d\d')
+#     user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
+#     if pattern.search(user_input):
+#         print("format correct")
+#     elif pattern.search(user_input) == None and user_input != 'exit':
+#         print("incorrect format. Please try again")
+
+print(calculate_time(1.6))
