@@ -84,16 +84,6 @@ class Truck:
             package_id, package_info = self.truck_cargo[i]
             self.address_list.append(package_info['delivery_address'])
 
-def find_create_minimum_route(start, address_list_size, route_empty, traveled_empty):
-    while len(traveled_empty) < address_list_size:
-        if len(traveled_empty) == 0:
-            next_dest, route_empty, traveled_empty = find_min_distance(start, route_empty, traveled_empty)
-        next_dest, route_empty, traveled_empty = find_min_distance(next_dest, route_empty, traveled_empty)
-        if len(traveled_empty) == address_list_size:
-            traveled_empty.append([edges[next_dest][0],0]) # this line return last index to hub
-            route_empty.append([vertices[0][0],0])
-            vertices[next_dest][1] = 1
-
 def find_min_distance(start, route_empty, traveled_empty):
     minimum = 1000
     global new_v
@@ -105,6 +95,17 @@ def find_min_distance(start, route_empty, traveled_empty):
     route_empty.append((vertices[new_v][0], calculate_time(minimum)))
     vertices[start][1] = 1
     return new_v, route_empty, traveled_empty
+
+def find_create_minimum_route(start, address_list_size, route_empty, traveled_empty):
+    while len(traveled_empty) < address_list_size:
+        if len(traveled_empty) == 0:
+            next_dest, route_empty, traveled_empty = find_min_distance(start, route_empty, traveled_empty)
+        next_dest, route_empty, traveled_empty = find_min_distance(next_dest, route_empty, traveled_empty)
+        if len(traveled_empty) == address_list_size:
+            traveled_empty.append([edges[next_dest][0],0]) # this line return last index to hub
+            last_distance = traveled_empty[len(traveled_empty)-1][0]
+            route_empty.append((vertices[0][0], calculate_time(last_distance)))
+            vertices[next_dest][1] = 1
 
 def sum_of_route(total_traveled):
     sum = 0
@@ -256,6 +257,5 @@ print(total_traveled_1,'\n')
 #     elif pattern.search(user_input) == None and user_input != 'exit':
 #         print("incorrect format. Please try again")
 
-print(calculate_time(1.6))
 
 # print(time.strptime("08:35:15", "%I:%M:%S"))
