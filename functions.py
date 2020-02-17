@@ -86,12 +86,14 @@ class Truck:
 
     def add_truck_time(self, route_list):
         h, m, s = self.start_time.split(":")
+        acc_time_delta = datetime.timedelta(hours=int(h), minutes=int(m),seconds=int(s))
         for t in range(len(route_list)):
-            (hour, minute, second) = route_list[t][1].split(':')
-            hour = hour + h
-            minute = minute + m
-            second = second + s
-            print(f"{hour[2:]} {minute[0:2]} {second[:2]}")
+            hour, minute, second = route_list[t][1].split(':')
+            t_delta = datetime.timedelta(hours=int(hour), minutes=int(minute), seconds=int(second))
+            acc_time_delta = acc_time_delta + t_delta
+            print(acc_time_delta)
+            # use yield at some point
+
 
 def find_min_distance(start, route_empty, traveled_empty):
     minimum = 1000
@@ -271,4 +273,4 @@ print(total_traveled_1,'\n')
 
 # print(time.strptime("08:35:15", "%I:%M:%S"))
 
-print(truck_1.add_truck_time(route_list_1))
+truck_1.add_truck_time(route_list_1)
