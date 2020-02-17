@@ -102,7 +102,7 @@ def find_min_distance(start, route_empty, traveled_empty):
             minimum = edges[start][i]
             new_v = i
     traveled_empty.append([minimum, new_v])
-    route_empty.append([vertices[new_v][0], new_v])
+    route_empty.append((vertices[new_v][0], calculate_time(minimum)))
     vertices[start][1] = 1
     return new_v, route_empty, traveled_empty
 
@@ -230,7 +230,7 @@ distance_of_routes = round(truck_1_total_dist + truck_2_total_dist + truck_3_tot
 
 # create a time list
 
-# print(route_list_1,'\n')
+print(route_list_1,'\n')
 print(total_traveled_1,'\n')
 # print(truck_1_total_dist,'\n\n')
 # print(route_list_2,'\n')
