@@ -1,4 +1,5 @@
 # Marc
+import datetime
 from time import time
 import re
 import csv
@@ -171,6 +172,9 @@ total_traveled_1 = []
 total_traveled_2 = []
 total_traveled_3 = []
 
+# empty lists for time of deliveries and delivery location
+delivery_time_1 = []
+
 # this prints the matrix in a more readable format
 # for k in range(len(edges)):
 #     print(f"{k}  {edges[k]} \n")
@@ -224,8 +228,10 @@ truck_3_total_dist = sum_of_route(total_traveled_3)
 # this is the total distance of all three truck routes
 distance_of_routes = round(truck_1_total_dist + truck_2_total_dist + truck_3_total_dist, 2)
 
+# create a time list
+
 # print(route_list_1,'\n')
-# print(total_traveled_1,'\n')
+print(total_traveled_1,'\n')
 # print(truck_1_total_dist,'\n\n')
 # print(route_list_2,'\n')
 # print(total_traveled_2,'\n')
@@ -251,3 +257,5 @@ distance_of_routes = round(truck_1_total_dist + truck_2_total_dist + truck_3_tot
 #         print("incorrect format. Please try again")
 
 print(calculate_time(1.6))
+
+# print(time.strptime("08:35:15", "%I:%M:%S"))
