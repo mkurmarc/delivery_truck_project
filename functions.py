@@ -58,7 +58,7 @@ class Truck:
 
     def __init__(self, s_time):
         self.start_time = s_time
-        self.acc_time = []
+        # self.acc_time = []
         self.truck_cargo = []
         self.address_list = []
 
@@ -83,6 +83,15 @@ class Truck:
             self.truck_cargo.append(hash_table.get_val(package_list[i]))
             package_id, package_info = self.truck_cargo[i]
             self.address_list.append(package_info['delivery_address'])
+
+    def add_truck_time(self, route_list):
+        h, m, s = self.start_time.split(":")
+        for t in range(len(route_list)):
+            (hour, minute, second) = route_list[t][1].split(':')
+            hour = hour + h
+            minute = minute + m
+            second = second + s
+            print(f"{hour[2:]} {minute[0:2]} {second[:2]}")
 
 def find_min_distance(start, route_empty, traveled_empty):
     minimum = 1000
@@ -130,6 +139,8 @@ def calculate_time(distance):
     minutes, seconds = divmod(time_in_seconds, 60)
     hours, minutes = divmod(minutes, 60)
     return "%02d:%02d:%02d" % (hours, minutes, seconds)
+
+
 
 ################################ Program Script Below ################################ transfer to main later
 
@@ -259,3 +270,5 @@ print(total_traveled_1,'\n')
 
 
 # print(time.strptime("08:35:15", "%I:%M:%S"))
+
+print(truck_1.add_truck_time(route_list_1))
