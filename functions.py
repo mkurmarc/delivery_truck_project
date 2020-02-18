@@ -128,12 +128,13 @@ def calculate_time(distance):
     hours, minutes = divmod(minutes, 60)
     return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
-def write_to_package_update_file():
+def find_packages_for_address():
     temp_list = []
     for i in range(1, packages_plus_one):
         temp_list.append(hash_table.get_val(i))
         package_id, package_details = temp_list[i-1]
         if package_details['delivery_address'] in package_delivered_list:
+            package_details['delivery_status'] = 'delivered'
             print(package_id, package_details, '\n')
 
 def compare_user_input_to_times(user_input):
@@ -278,7 +279,6 @@ To exit the application, please enter 'exit'")
     user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
     if pattern.search(user_input):
         compare_user_input_to_times(user_input)
+        find_packages_for_address()
     elif pattern.search(user_input) == None and user_input != 'exit':
         print("incorrect format. Please try again")
-
-write_to_package_update_file()
