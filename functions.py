@@ -56,10 +56,6 @@ class Truck:
         self.truck_cargo = []
         self.address_list = []
 
-    def __str__(self):
-        return (f"Truck's cargo includes {self.truck_cargo}\nTruck left from hub at {self.start_time}\
-                \nTotal time is {self.acc_time}") # use total time to mark packages on board as either in transit, delivered, or at hub
-
 # These methods load packages from hash map to the truck_cargo of truck object, and loads the addresses to the address_list.
     def load_truck(self, list):
         package_list = list
@@ -99,7 +95,7 @@ def find_create_minimum_route(start, address_list_size, route_empty, traveled_em
             next_dest, route_empty, traveled_empty = find_min_distance(start, route_empty, traveled_empty)
         next_dest, route_empty, traveled_empty = find_min_distance(next_dest, route_empty, traveled_empty)
         if len(traveled_empty) == address_list_size:
-            traveled_empty.append([edges[next_dest][0],0]) # this line return last index to hub
+            traveled_empty.append([edges[next_dest][0],0])
             last_distance = traveled_empty[len(traveled_empty)-1][0]
             route_empty.append([vertices[0][0], calculate_time(last_distance)])
             vertices[next_dest][1] = 1
@@ -109,6 +105,10 @@ def sum_of_route(total_traveled):
     for i in range(len(total_traveled)):
         sum += total_traveled[i][0]
     return sum
+
+def calc_distance_of_all_routes():
+    distance_of_routes = round(truck_1_total_dist + truck_2_total_dist + truck_3_total_dist, 2)
+    return distance_of_routes
 
 def change_del_status_to_1(vertices_list, package_address_list):
     for i in range(number_of_vertices):
@@ -128,7 +128,17 @@ def calculate_time(distance):
     hours, minutes = divmod(minutes, 60)
     return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
+def write_to_package_update_file():
+    pass
 
+def compare_user_input_to_times(user_input):
+    hr, min, sec = user_input.split(":")
+    time_user_input = datetime.time(hour=int(hr), minute=int(min), second=int(sec))
+    for i in range(len(combined_route_list)):
+        hour, minute, second = combined_route_list[i][1].split(":")
+        time_to_compare = datetime.time(hour=int(hour), minute=int(minute), second=int(second))
+        if time_user_input >= time_to_compare:
+            print(f"append {time_to_compare} to text file")
 
 ################################ Program Script Below ################################ transfer to main later
 
@@ -163,11 +173,11 @@ vertices = [[index,0] for index in vertices]
 # stores number of vertices in the vertices
 number_of_vertices = len(vertices)
 
-# three empty lists for address, index of address on matrix. This will show the path from address to address for each truck
+# three empty lists for delivery address and time delivered
 route_list_1 = []
 route_list_2 = []
 route_list_3 = []
-# three empty lists for distance traveled between points, index traveled to for each truck
+# three empty lists for distance traveled between points and index on edges matrix index traveled to for each truck
 total_traveled_1 = []
 total_traveled_2 = []
 total_traveled_3 = []
@@ -179,7 +189,7 @@ delivery_time_1 = []
 # for k in range(len(edges)):
 #     print(f"{k}  {edges[k]} \n")
 
-# lists of package IDs for each trip and truck according to the special notes
+# lists of package IDs for each trip and truck according to the special notes. All special criteria has been met and verified.
 package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
 package_list_trip_2 = [31, 32, 37, 38, 5, 3, 18, 36, 6, 25, 26, 28, 2, 33, 27, 35]
 package_list_trip_3 = [9, 10, 11, 12, 17, 22, 23, 24]
@@ -206,7 +216,6 @@ reset_del_status()
 truck_1_total_dist = sum_of_route(total_traveled_1)
 truck_1.add_truck_time(route_list_1)
 
-
 # similar to block of code above but the truck object and lists are different
 truck_2.load_truck(package_list_trip_2)
 truck_2_address_list = truck_2.address_list
@@ -217,7 +226,6 @@ find_create_minimum_route(0, truck_2_address_list_size, route_list_2, total_trav
 reset_del_status()
 truck_2_total_dist = sum_of_route(total_traveled_2)
 truck_2.add_truck_time(route_list_2)
-
 
 # similar to block of code above but the truck object and lists are different
 truck_3.load_truck(package_list_trip_3)
@@ -231,35 +239,34 @@ truck_3_total_dist = sum_of_route(total_traveled_3)
 truck_3.add_truck_time(route_list_3)
 
 # this is the total distance of all three truck routes
-distance_of_routes = round(truck_1_total_dist + truck_2_total_dist + truck_3_total_dist, 2)
+# please uncomment line below to see total miles traveled for all routes
+# print(calc_distance_of_all_routes())
 
-# create a time list
+# this block of code combines all the route_lists into one list called combined_route_list
+combined_route_list = route_list_3.copy()
+combined_route_list.extend(route_list_2)
+combined_route_list.extend(route_list_1)
 
-print(route_list_1,'\n')
+
+# print(route_list_1,'\n')
 # print(total_traveled_1,'\n')
 # print(truck_1_total_dist,'\n\n')
-print(route_list_2,'\n')
+# print(route_list_2,'\n')
 # print(total_traveled_2,'\n')
 # print(truck_2_total_dist,'\n\n')
-print(route_list_3,'\n')
+# print(route_list_3,'\n')
 # print(total_traveled_3,'\n')
 # print(truck_3_total_dist,'\n')
-
 # print(distance_of_routes)
-# Calling function calculate_time() using rate of 18 mph
-# print("The calculated time is", truck_1.calculate_time(100, 18)); # 1st parameter can be a variable received from algorithm
 
 # Block of code create user menu to intereact with the program
 # user_input = ""
 # while user_input != 'exit':
-#     print("To see the delivery status of packages at any given time, please enter the time in HH:MM:SS format.\
+#     print("To see the delivery status of packages at any given time, please enter the time in HH:MM:SS format. \
 # To exit the application, please enter 'exit'")
 #     pattern = re.compile(r'\d\d:\d\d:\d\d')
 #     user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
 #     if pattern.search(user_input):
-#         print("format correct")
+#         compare_user_input_to_times(user_input)
 #     elif pattern.search(user_input) == None and user_input != 'exit':
 #         print("incorrect format. Please try again")
-
-
-# print(time.strptime("08:35:15", "%I:%M:%S"))
