@@ -80,6 +80,11 @@ class Truck:
             acc_time_delta = acc_time_delta + t_delta
             route_list[t][1] = str(acc_time_delta)
 
+    def truck_tstring_to_time(self):
+        t_hr, t_min, t_sec = self.start_time.split(":")
+        truck_time = datetime.time(hour=int(t_hr), minute=int(t_min), second=int(t_sec))
+        return truck_time
+
 def find_min_distance(start, route_empty, traveled_empty):
     minimum = 1000
     global new_v
@@ -131,26 +136,27 @@ def calculate_time(distance):
     hours, minutes = divmod(minutes, 60)
     return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
-def find_packages_for_address():
-    temp_list = []
-    for i in range(1, packages_plus_one):
-        temp_list.append(hash_table.get_val(i))
-        package_id, package_details = temp_list[i-1]
-        if package_details['delivery_address'] in package_delivered_list:
-            package_details['delivery_status'] = 'delivered'
-            print(package_id, package_details, '\n')
-        else:
-            print(package_id, package_details, '\n')
-
-def compare_user_input_to_times(user_input):
+def compare_times_and_update_status(user_input):
     hr, min, sec = user_input.split(":")
     time_user_input = datetime.time(hour=int(hr), minute=int(min), second=int(sec))
+    time_t1 = truck_1.truck_tstring_to_time()
+    time_t2 = truck_2.truck_tstring_to_time()
+    time_t3 = truck_3.truck_tstring_to_time()
+    t1_addresses = truck_1.address_list
+    t2_addresses = truck_2.address_list
+    t3_addresses = truck_3.address_list
     for i in range(len(combined_route_list)):
         hour, minute, second = combined_route_list[i][1].split(":")
         time_to_compare = datetime.time(hour=int(hour), minute=int(minute), second=int(second))
         if time_user_input >= time_to_compare:
-            package_delivered_list.append(combined_route_list[i][0])
-            print(f"append {time_to_compare} to text file")
+            hash_table.update_val_with_address('delivery_status', combined_route_list[i][0], 'delivered')
+            # print(f"append {time_to_compare} to text file")
+        if i < len(t1_addresses) and time_user_input < time_t1:
+            hash_table.update_val_with_address('delivery_status', t1_addresses[i], 'at hub')
+        if i < len(t2_addresses) and time_user_input < time_t2:
+            hash_table.update_val_with_address('delivery_status', t2_addresses[i], 'at hub')
+        if i < len(t3_addresses) and time_user_input < time_t3:
+            hash_table.update_val_with_address('delivery_status', t3_addresses[i], 'at hub')
 
 ################################ Program Script Below ################################ transfer to main later
 
@@ -194,9 +200,6 @@ route_list_3 = []
 total_traveled_1 = []
 total_traveled_2 = []
 total_traveled_3 = []
-
-# empty lists for time of deliveries and delivery location
-delivery_time_1 = []
 
 # this prints the matrix in a more readable format
 # for k in range(len(edges)):
@@ -272,12 +275,6 @@ combined_route_list.extend(route_list_1)
 # print(truck_3_total_dist,'\n')
 # print(distance_of_routes)
 
-# empty list for the addresses delivered to before the user input time
-package_delivered_list = []
-
-# hash_table.update_val_with_address('delivery_status', '5025 State St', 'in route')
-# print(hash_table.get_val(24))
-
 # Block of code create user menu to intereact with the program
 user_input = ""
 while user_input != 'exit':
@@ -286,7 +283,8 @@ To exit the application, please enter 'exit'")
     pattern = re.compile(r'\d\d:\d\d:\d\d')
     user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
     if pattern.search(user_input):
-        compare_user_input_to_times(user_input)
-        find_packages_for_address()
+        compare_times_and_update_status(user_input)
     elif pattern.search(user_input) == None and user_input != 'exit':
         print("incorrect format. Please try again")
+
+print(hash_table)
