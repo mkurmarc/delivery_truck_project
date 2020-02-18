@@ -129,7 +129,13 @@ def calculate_time(distance):
     return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
 def write_to_package_update_file():
-    pass
+    temp_list = []
+    for i in range(1, packages_plus_one):
+        temp_list.append(hash_table.get_val(i))
+        package_id, package_details = temp_list[i-1]
+        if package_details['delivery_address'] in package_delivered_list:
+            print(package_details, '\n')
+    # print(temp_list)
 
 def compare_user_input_to_times(user_input):
     hr, min, sec = user_input.split(":")
@@ -138,12 +144,14 @@ def compare_user_input_to_times(user_input):
         hour, minute, second = combined_route_list[i][1].split(":")
         time_to_compare = datetime.time(hour=int(hour), minute=int(minute), second=int(second))
         if time_user_input >= time_to_compare:
+            package_delivered_list.append(combined_route_list[i][0])
             print(f"append {time_to_compare} to text file")
 
 ################################ Program Script Below ################################ transfer to main later
 
-# creates hash table with 41 buckets to avoid collisions
-hash_table = HashTable(41)
+# creates hash table with 41 buckets to avoid collisions since there are 40 packages
+packages_plus_one = 41
+hash_table = HashTable(packages_plus_one)
 
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
 with open("package_file.txt") as f:
@@ -259,14 +267,19 @@ combined_route_list.extend(route_list_1)
 # print(truck_3_total_dist,'\n')
 # print(distance_of_routes)
 
+# empty list for the addresses delivered to before the user input time
+package_delivered_list = []
+
 # Block of code create user menu to intereact with the program
-# user_input = ""
-# while user_input != 'exit':
-#     print("To see the delivery status of packages at any given time, please enter the time in HH:MM:SS format. \
-# To exit the application, please enter 'exit'")
-#     pattern = re.compile(r'\d\d:\d\d:\d\d')
-#     user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
-#     if pattern.search(user_input):
-#         compare_user_input_to_times(user_input)
-#     elif pattern.search(user_input) == None and user_input != 'exit':
-#         print("incorrect format. Please try again")
+user_input = ""
+while user_input != 'exit':
+    print("To see the delivery status of packages at any given time, please enter the time in HH:MM:SS format. \
+To exit the application, please enter 'exit'")
+    pattern = re.compile(r'\d\d:\d\d:\d\d')
+    user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
+    if pattern.search(user_input):
+        compare_user_input_to_times(user_input)
+    elif pattern.search(user_input) == None and user_input != 'exit':
+        print("incorrect format. Please try again")
+
+write_to_package_update_file()
