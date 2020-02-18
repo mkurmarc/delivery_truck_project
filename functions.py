@@ -52,7 +52,7 @@ class HashTable:
 
 # This dunder method prints string representation of hash_table
     def __str__(self):
-        return "".join(str(item) for item in self.hash_table)
+        return "\n\n".join(str(item) for item in self.hash_table)
 
 
 class Truck:
@@ -149,8 +149,7 @@ def compare_times_and_update_status(user_input):
         hour, minute, second = combined_route_list[i][1].split(":")
         time_to_compare = datetime.time(hour=int(hour), minute=int(minute), second=int(second))
         if time_user_input >= time_to_compare:
-            hash_table.update_val_with_address('delivery_status', combined_route_list[i][0], 'delivered')
-            # print(f"append {time_to_compare} to text file")
+            hash_table.update_val_with_address('delivery_status', combined_route_list[i][0], f'delivered at {time_to_compare}')
         if i < len(t1_addresses) and time_user_input < time_t1:
             hash_table.update_val_with_address('delivery_status', t1_addresses[i], 'at hub')
         if i < len(t2_addresses) and time_user_input < time_t2:
@@ -161,9 +160,7 @@ def compare_times_and_update_status(user_input):
 ################################ Program Script Below ################################ transfer to main later
 
 # creates hash table with 41 buckets to avoid collisions since there are 40 packages
-packages_plus_one = 41
-hash_table = HashTable(packages_plus_one)
-
+hash_table = HashTable(41)
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
 with open("package_file.txt") as f:
     for line in f:
@@ -177,7 +174,6 @@ with open("package_file.txt") as f:
 
 # creates empty map matrix to be use for distances between addresses
 edges = []
-
 # this block of code reads in the csv file of distances and appends to edges to create a matrix
 with open('wgups_distance_table_headers.csv', 'r') as csv_dist_file:
     csv_reader = csv.reader(csv_dist_file)
@@ -188,7 +184,6 @@ with open('wgups_distance_table_headers.csv', 'r') as csv_dist_file:
 
 # used list comprehension to make a list of lists with vertices/addresses and 0 in each list. 0 means not visited.
 vertices = [[index,0] for index in vertices]
-
 # stores number of vertices in the vertices
 number_of_vertices = len(vertices)
 
@@ -201,16 +196,12 @@ total_traveled_1 = []
 total_traveled_2 = []
 total_traveled_3 = []
 
-# this prints the matrix in a more readable format
-# for k in range(len(edges)):
-#     print(f"{k}  {edges[k]} \n")
-
 # lists of package IDs for each trip and truck according to the special notes. All special criteria has been met and verified.
 package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
 package_list_trip_2 = [31, 32, 37, 38, 5, 3, 18, 36, 6, 25, 26, 28, 2, 33, 27, 35]
 package_list_trip_3 = [9, 10, 11, 12, 17, 22, 23, 24]
 
-# create truck objects
+# creates truck objects
 truck_1 = Truck('08:00:00')
 truck_2 = Truck('09:05:00')
 truck_3 = Truck('10:20:00')
@@ -263,18 +254,6 @@ combined_route_list = route_list_3.copy()
 combined_route_list.extend(route_list_2)
 combined_route_list.extend(route_list_1)
 
-
-# print(route_list_1,'\n')
-# print(total_traveled_1,'\n')
-# print(truck_1_total_dist,'\n\n')
-# print(route_list_2,'\n')
-# print(total_traveled_2,'\n')
-# print(truck_2_total_dist,'\n\n')
-# print(route_list_3,'\n')
-# print(total_traveled_3,'\n')
-# print(truck_3_total_dist,'\n')
-# print(distance_of_routes)
-
 # Block of code create user menu to intereact with the program
 user_input = ""
 while user_input != 'exit':
@@ -284,7 +263,6 @@ To exit the application, please enter 'exit'")
     user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
     if pattern.search(user_input):
         compare_times_and_update_status(user_input)
+        print(hash_table, "\n\n")
     elif pattern.search(user_input) == None and user_input != 'exit':
         print("incorrect format. Please try again")
-
-print(hash_table)
