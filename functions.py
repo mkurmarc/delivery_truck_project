@@ -59,20 +59,19 @@ class Truck:
 
     def __init__(self, s_time):
         self.start_time = s_time
-        self.truck_cargo = []
         self.address_list = []
 
 # These methods load packages from hash map to the truck_cargo of truck object, and loads the addresses to the address_list.
     def load_truck(self, list):
         package_list = list
         for i in range(len(list)):
-            self.truck_cargo.append(hash_table.get_val(package_list[i]))
-            package_id, package_info = self.truck_cargo[i]
+            package_id, package_info = hash_table.get_val(package_list[i])
+            package_info['delivery_status'] = 'in route'
             self.address_list.append(package_info['delivery_address'])
 
 # this method adds the truck objects time it leaves from the hub to the time between each delivery address and
 # updates the route_list to show the accumulated time (time it arrives at address)
-    def add_truck_time(self, route_list):
+    def add_truck_start_time(self, route_list):
         h, m, s = self.start_time.split(":")
         acc_time_delta = datetime.timedelta(hours=int(h), minutes=int(m),seconds=int(s))
         for t in range(len(route_list)):
@@ -228,7 +227,7 @@ find_create_minimum_route(0, truck_1_address_list_size, route_list_1, total_trav
 reset_del_status()
 # code block saves the sum of truck_1 route, its address route, and distance traveled between each index/address
 truck_1_total_dist = sum_of_route(total_traveled_1)
-truck_1.add_truck_time(route_list_1)
+truck_1.add_truck_start_time(route_list_1)
 
 # similar to block of code above but the truck object and lists are different
 truck_2.load_truck(package_list_trip_2)
@@ -239,7 +238,7 @@ change_del_status_to_1(vertices, truck_2_address_list)
 find_create_minimum_route(0, truck_2_address_list_size, route_list_2, total_traveled_2)
 reset_del_status()
 truck_2_total_dist = sum_of_route(total_traveled_2)
-truck_2.add_truck_time(route_list_2)
+truck_2.add_truck_start_time(route_list_2)
 
 # similar to block of code above but the truck object and lists are different
 truck_3.load_truck(package_list_trip_3)
@@ -250,7 +249,7 @@ change_del_status_to_1(vertices, truck_3_address_list)
 find_create_minimum_route(0, truck_3_address_list_size,route_list_3, total_traveled_3)
 reset_del_status()
 truck_3_total_dist = sum_of_route(total_traveled_3)
-truck_3.add_truck_time(route_list_3)
+truck_3.add_truck_start_time(route_list_3)
 
 # this is the total distance of all three truck routes
 # please uncomment line below to see total miles traveled for all routes
@@ -276,18 +275,18 @@ combined_route_list.extend(route_list_1)
 # empty list for the addresses delivered to before the user input time
 package_delivered_list = []
 
-hash_table.update_val_with_address('delivery_status', '5025 State St', 'in route')
-print(hash_table.get_val(24))
+# hash_table.update_val_with_address('delivery_status', '5025 State St', 'in route')
+# print(hash_table.get_val(24))
 
 # Block of code create user menu to intereact with the program
-# user_input = ""
-# while user_input != 'exit':
-#     print("To see the delivery status of packages at any given time, please enter the time in HH:MM:SS format. \
-# To exit the application, please enter 'exit'")
-#     pattern = re.compile(r'\d\d:\d\d:\d\d')
-#     user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
-#     if pattern.search(user_input):
-#         compare_user_input_to_times(user_input)
-#         find_packages_for_address()
-#     elif pattern.search(user_input) == None and user_input != 'exit':
-#         print("incorrect format. Please try again")
+user_input = ""
+while user_input != 'exit':
+    print("To see the delivery status of packages at any given time, please enter the time in HH:MM:SS format. \
+To exit the application, please enter 'exit'")
+    pattern = re.compile(r'\d\d:\d\d:\d\d')
+    user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
+    if pattern.search(user_input):
+        compare_user_input_to_times(user_input)
+        find_packages_for_address()
+    elif pattern.search(user_input) == None and user_input != 'exit':
+        print("incorrect format. Please try again")
