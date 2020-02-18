@@ -14,7 +14,7 @@ class HashTable:
     def create_buckets(self):
         return [[] for _ in range(self.size)]
 
-# insert and update key, value information with O(N) complexity
+# insert and update key, value information with O(1) complexity
     def set_val(self, key, value):
         hashed_key = hash(key)%self.size
         bucket = self.hash_table[hashed_key]
@@ -29,7 +29,7 @@ class HashTable:
         else:
             bucket.append((key, value)) # appending stops collisions from happening
 
-# retrieves value from hash table with O(N) complexity
+# retrieves value from hash table with O(1) complexity
     def get_val(self, key):
         hashed_key = hash(key)%self.size
         bucket = self.hash_table[hashed_key]
@@ -134,8 +134,7 @@ def write_to_package_update_file():
         temp_list.append(hash_table.get_val(i))
         package_id, package_details = temp_list[i-1]
         if package_details['delivery_address'] in package_delivered_list:
-            print(package_details, '\n')
-    # print(temp_list)
+            print(package_id, package_details, '\n')
 
 def compare_user_input_to_times(user_input):
     hr, min, sec = user_input.split(":")
