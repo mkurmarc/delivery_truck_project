@@ -1,6 +1,5 @@
 # Marc
 import datetime
-from time import time
 import re
 import csv
 
@@ -45,10 +44,6 @@ class HashTable:
         else:
             return "No package found with that key"
 
-# create update function for hashmap
-    def update_val(self):
-        pass
-
 # This dunder method prints string representation of hash_table
     def __str__(self):
         return "".join(str(item) for item in self.hash_table)
@@ -58,7 +53,6 @@ class Truck:
 
     def __init__(self, s_time):
         self.start_time = s_time
-        # self.acc_time = []
         self.truck_cargo = []
         self.address_list = []
 
