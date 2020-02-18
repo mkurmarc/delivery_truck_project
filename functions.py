@@ -136,6 +136,8 @@ def find_packages_for_address():
         if package_details['delivery_address'] in package_delivered_list:
             package_details['delivery_status'] = 'delivered'
             print(package_id, package_details, '\n')
+        else:
+            print(package_id, package_details, '\n')
 
 def compare_user_input_to_times(user_input):
     hr, min, sec = user_input.split(":")
