@@ -25,9 +25,9 @@ class HashTable:
                 found_key = True
                 break
         if found_key:
-            bucket[index] = (key, value)
+            bucket[index] = [key, value]
         else:
-            bucket.append((key, value)) # appending stops collisions from happening
+            bucket.append([key, value]) # appending stops collisions from happening
 
 # retrieves value from hash table with O(1) complexity
     def get_val(self, key):
@@ -40,9 +40,15 @@ class HashTable:
                 found_key = True
                 break
         if found_key:
-            return record_key, record_value
+            return [record_key, record_value]
         else:
             return "No package found with that key"
+
+    def update_val_with_address(self, key_to_update, address_to_search, new_val):
+        for i in range(1, self.size):
+            package_id, package_details = hash_table.get_val(i)
+            if package_details['delivery_address'] == address_to_search:
+                package_details[key_to_update] = new_val
 
 # This dunder method prints string representation of hash_table
     def __str__(self):
@@ -74,8 +80,6 @@ class Truck:
             t_delta = datetime.timedelta(hours=int(hour), minutes=int(minute), seconds=int(second))
             acc_time_delta = acc_time_delta + t_delta
             route_list[t][1] = str(acc_time_delta)
-            # use yield at some point?
-
 
 def find_min_distance(start, route_empty, traveled_empty):
     minimum = 1000
@@ -272,15 +276,18 @@ combined_route_list.extend(route_list_1)
 # empty list for the addresses delivered to before the user input time
 package_delivered_list = []
 
+hash_table.update_val_with_address('delivery_status', '5025 State St', 'in route')
+print(hash_table.get_val(24))
+
 # Block of code create user menu to intereact with the program
-user_input = ""
-while user_input != 'exit':
-    print("To see the delivery status of packages at any given time, please enter the time in HH:MM:SS format. \
-To exit the application, please enter 'exit'")
-    pattern = re.compile(r'\d\d:\d\d:\d\d')
-    user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
-    if pattern.search(user_input):
-        compare_user_input_to_times(user_input)
-        find_packages_for_address()
-    elif pattern.search(user_input) == None and user_input != 'exit':
-        print("incorrect format. Please try again")
+# user_input = ""
+# while user_input != 'exit':
+#     print("To see the delivery status of packages at any given time, please enter the time in HH:MM:SS format. \
+# To exit the application, please enter 'exit'")
+#     pattern = re.compile(r'\d\d:\d\d:\d\d')
+#     user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
+#     if pattern.search(user_input):
+#         compare_user_input_to_times(user_input)
+#         find_packages_for_address()
+#     elif pattern.search(user_input) == None and user_input != 'exit':
+#         print("incorrect format. Please try again")
