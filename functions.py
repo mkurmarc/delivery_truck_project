@@ -25,9 +25,9 @@ class HashTable:
                 found_key = True
                 break
         if found_key:
-            bucket[index] = (key, value)
+            bucket[index] = [key, value]
         else:
-            bucket.append((key, value)) # appending stops collisions from happening
+            bucket.append([key, value]) # appending stops collisions from happening
 
 # retrieves value from hash table with O(1) complexity
     def get_val(self, key):
@@ -40,33 +40,38 @@ class HashTable:
                 found_key = True
                 break
         if found_key:
-            return record_key, record_value
+            return [record_key, record_value]
         else:
             return "No package found with that key"
 
+    def update_val_with_address(self, key_to_update, address_to_search, new_val):
+        for i in range(1, self.size):
+            package_id, package_details = hash_table.get_val(i)
+            if package_details['delivery_address'] == address_to_search:
+                package_details[key_to_update] = new_val
+
 # This dunder method prints string representation of hash_table
     def __str__(self):
-        return "".join(str(item) for item in self.hash_table)
+        return "\n\n".join(str(item) for item in self.hash_table)
 
 
 class Truck:
 
     def __init__(self, s_time):
         self.start_time = s_time
-        self.truck_cargo = []
         self.address_list = []
 
 # These methods load packages from hash map to the truck_cargo of truck object, and loads the addresses to the address_list.
     def load_truck(self, list):
         package_list = list
         for i in range(len(list)):
-            self.truck_cargo.append(hash_table.get_val(package_list[i]))
-            package_id, package_info = self.truck_cargo[i]
+            package_id, package_info = hash_table.get_val(package_list[i])
+            package_info['delivery_status'] = 'in route'
             self.address_list.append(package_info['delivery_address'])
 
 # this method adds the truck objects time it leaves from the hub to the time between each delivery address and
 # updates the route_list to show the accumulated time (time it arrives at address)
-    def add_truck_time(self, route_list):
+    def add_truck_start_time(self, route_list):
         h, m, s = self.start_time.split(":")
         acc_time_delta = datetime.timedelta(hours=int(h), minutes=int(m),seconds=int(s))
         for t in range(len(route_list)):
@@ -74,8 +79,11 @@ class Truck:
             t_delta = datetime.timedelta(hours=int(hour), minutes=int(minute), seconds=int(second))
             acc_time_delta = acc_time_delta + t_delta
             route_list[t][1] = str(acc_time_delta)
-            # use yield at some point?
 
+    def truck_tstring_to_time(self):
+        t_hr, t_min, t_sec = self.start_time.split(":")
+        truck_time = datetime.time(hour=int(t_hr), minute=int(t_min), second=int(t_sec))
+        return truck_time
 
 def find_min_distance(start, route_empty, traveled_empty):
     minimum = 1000
@@ -128,30 +136,31 @@ def calculate_time(distance):
     hours, minutes = divmod(minutes, 60)
     return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
-def write_to_package_update_file():
-    temp_list = []
-    for i in range(1, packages_plus_one):
-        temp_list.append(hash_table.get_val(i))
-        package_id, package_details = temp_list[i-1]
-        if package_details['delivery_address'] in package_delivered_list:
-            print(package_id, package_details, '\n')
-
-def compare_user_input_to_times(user_input):
+def compare_times_and_update_status(user_input):
     hr, min, sec = user_input.split(":")
     time_user_input = datetime.time(hour=int(hr), minute=int(min), second=int(sec))
+    time_t1 = truck_1.truck_tstring_to_time()
+    time_t2 = truck_2.truck_tstring_to_time()
+    time_t3 = truck_3.truck_tstring_to_time()
+    t1_addresses = truck_1.address_list
+    t2_addresses = truck_2.address_list
+    t3_addresses = truck_3.address_list
     for i in range(len(combined_route_list)):
         hour, minute, second = combined_route_list[i][1].split(":")
         time_to_compare = datetime.time(hour=int(hour), minute=int(minute), second=int(second))
         if time_user_input >= time_to_compare:
-            package_delivered_list.append(combined_route_list[i][0])
-            print(f"append {time_to_compare} to text file")
+            hash_table.update_val_with_address('delivery_status', combined_route_list[i][0], f'delivered at {time_to_compare}')
+        if i < len(t1_addresses) and time_user_input < time_t1:
+            hash_table.update_val_with_address('delivery_status', t1_addresses[i], 'at hub')
+        if i < len(t2_addresses) and time_user_input < time_t2:
+            hash_table.update_val_with_address('delivery_status', t2_addresses[i], 'at hub')
+        if i < len(t3_addresses) and time_user_input < time_t3:
+            hash_table.update_val_with_address('delivery_status', t3_addresses[i], 'at hub')
 
 ################################ Program Script Below ################################ transfer to main later
 
 # creates hash table with 41 buckets to avoid collisions since there are 40 packages
-packages_plus_one = 41
-hash_table = HashTable(packages_plus_one)
-
+hash_table = HashTable(41)
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
 with open("package_file.txt") as f:
     for line in f:
@@ -165,7 +174,6 @@ with open("package_file.txt") as f:
 
 # creates empty map matrix to be use for distances between addresses
 edges = []
-
 # this block of code reads in the csv file of distances and appends to edges to create a matrix
 with open('wgups_distance_table_headers.csv', 'r') as csv_dist_file:
     csv_reader = csv.reader(csv_dist_file)
@@ -176,7 +184,6 @@ with open('wgups_distance_table_headers.csv', 'r') as csv_dist_file:
 
 # used list comprehension to make a list of lists with vertices/addresses and 0 in each list. 0 means not visited.
 vertices = [[index,0] for index in vertices]
-
 # stores number of vertices in the vertices
 number_of_vertices = len(vertices)
 
@@ -189,19 +196,12 @@ total_traveled_1 = []
 total_traveled_2 = []
 total_traveled_3 = []
 
-# empty lists for time of deliveries and delivery location
-delivery_time_1 = []
-
-# this prints the matrix in a more readable format
-# for k in range(len(edges)):
-#     print(f"{k}  {edges[k]} \n")
-
 # lists of package IDs for each trip and truck according to the special notes. All special criteria has been met and verified.
 package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
 package_list_trip_2 = [31, 32, 37, 38, 5, 3, 18, 36, 6, 25, 26, 28, 2, 33, 27, 35]
 package_list_trip_3 = [9, 10, 11, 12, 17, 22, 23, 24]
 
-# create truck objects
+# creates truck objects
 truck_1 = Truck('08:00:00')
 truck_2 = Truck('09:05:00')
 truck_3 = Truck('10:20:00')
@@ -221,7 +221,7 @@ find_create_minimum_route(0, truck_1_address_list_size, route_list_1, total_trav
 reset_del_status()
 # code block saves the sum of truck_1 route, its address route, and distance traveled between each index/address
 truck_1_total_dist = sum_of_route(total_traveled_1)
-truck_1.add_truck_time(route_list_1)
+truck_1.add_truck_start_time(route_list_1)
 
 # similar to block of code above but the truck object and lists are different
 truck_2.load_truck(package_list_trip_2)
@@ -232,7 +232,7 @@ change_del_status_to_1(vertices, truck_2_address_list)
 find_create_minimum_route(0, truck_2_address_list_size, route_list_2, total_traveled_2)
 reset_del_status()
 truck_2_total_dist = sum_of_route(total_traveled_2)
-truck_2.add_truck_time(route_list_2)
+truck_2.add_truck_start_time(route_list_2)
 
 # similar to block of code above but the truck object and lists are different
 truck_3.load_truck(package_list_trip_3)
@@ -243,7 +243,7 @@ change_del_status_to_1(vertices, truck_3_address_list)
 find_create_minimum_route(0, truck_3_address_list_size,route_list_3, total_traveled_3)
 reset_del_status()
 truck_3_total_dist = sum_of_route(total_traveled_3)
-truck_3.add_truck_time(route_list_3)
+truck_3.add_truck_start_time(route_list_3)
 
 # this is the total distance of all three truck routes
 # please uncomment line below to see total miles traveled for all routes
@@ -254,21 +254,6 @@ combined_route_list = route_list_3.copy()
 combined_route_list.extend(route_list_2)
 combined_route_list.extend(route_list_1)
 
-
-# print(route_list_1,'\n')
-# print(total_traveled_1,'\n')
-# print(truck_1_total_dist,'\n\n')
-# print(route_list_2,'\n')
-# print(total_traveled_2,'\n')
-# print(truck_2_total_dist,'\n\n')
-# print(route_list_3,'\n')
-# print(total_traveled_3,'\n')
-# print(truck_3_total_dist,'\n')
-# print(distance_of_routes)
-
-# empty list for the addresses delivered to before the user input time
-package_delivered_list = []
-
 # Block of code create user menu to intereact with the program
 user_input = ""
 while user_input != 'exit':
@@ -277,8 +262,7 @@ To exit the application, please enter 'exit'")
     pattern = re.compile(r'\d\d:\d\d:\d\d')
     user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
     if pattern.search(user_input):
-        compare_user_input_to_times(user_input)
+        compare_times_and_update_status(user_input)
+        print(hash_table, "\n\n")
     elif pattern.search(user_input) == None and user_input != 'exit':
         print("incorrect format. Please try again")
-
-write_to_package_update_file()
