@@ -58,7 +58,7 @@ class Truck:
 
     def __init__(self, s_time):
         self.start_time = s_time
-        self.acc_time = []
+        # self.acc_time = []
         self.truck_cargo = []
         self.address_list = []
 
@@ -66,17 +66,7 @@ class Truck:
         return (f"Truck's cargo includes {self.truck_cargo}\nTruck left from hub at {self.start_time}\
                 \nTotal time is {self.acc_time}") # use total time to mark packages on board as either in transit, delivered, or at hub
 
-# function to calculate time given distance and speed. Time = Distance / Speed
-    # def calculate_time(self, distance, speed):
-    #     float_time = distance/speed
-    #     time_in_seconds = float_time * 60 * 60
-    #     minutes, seconds = divmod(time_in_seconds, 60)
-    #     hours, minutes = divmod(minutes, 60)
-    #     return "%02d:%02d:%02d" % (hours, minutes, seconds)
-
-# These methods load packages from hash map to the truck_cargo of truck object, and
-# loads the addresses to the address_list. The 1,2,3 means the 1st, 2nd, or 3rd trip.
-# It is going to take a toal of three truck routes/trips to deliver all the packages
+# These methods load packages from hash map to the truck_cargo of truck object, and loads the addresses to the address_list.
     def load_truck(self, list):
         package_list = list
         for i in range(len(list)):
@@ -84,15 +74,18 @@ class Truck:
             package_id, package_info = self.truck_cargo[i]
             self.address_list.append(package_info['delivery_address'])
 
-def find_create_minimum_route(start, address_list_size, route_empty, traveled_empty):
-    while len(traveled_empty) < address_list_size:
-        if len(traveled_empty) == 0:
-            next_dest, route_empty, traveled_empty = find_min_distance(start, route_empty, traveled_empty)
-        next_dest, route_empty, traveled_empty = find_min_distance(next_dest, route_empty, traveled_empty)
-        if len(traveled_empty) == address_list_size:
-            traveled_empty.append([edges[next_dest][0],0]) # this line return last index to hub
-            route_empty.append([vertices[0][0],0])
-            vertices[next_dest][1] = 1
+# this method adds the truck objects time it leaves from the hub to the time between each delivery address and
+# updates the route_list to show the accumulated time (time it arrives at address)
+    def add_truck_time(self, route_list):
+        h, m, s = self.start_time.split(":")
+        acc_time_delta = datetime.timedelta(hours=int(h), minutes=int(m),seconds=int(s))
+        for t in range(len(route_list)):
+            hour, minute, second = route_list[t][1].split(':')
+            t_delta = datetime.timedelta(hours=int(hour), minutes=int(minute), seconds=int(second))
+            acc_time_delta = acc_time_delta + t_delta
+            route_list[t][1] = str(acc_time_delta)
+            # use yield at some point?
+
 
 def find_min_distance(start, route_empty, traveled_empty):
     minimum = 1000
@@ -102,9 +95,20 @@ def find_min_distance(start, route_empty, traveled_empty):
             minimum = edges[start][i]
             new_v = i
     traveled_empty.append([minimum, new_v])
-    route_empty.append([vertices[new_v][0], new_v])
+    route_empty.append([vertices[new_v][0], calculate_time(minimum)])
     vertices[start][1] = 1
     return new_v, route_empty, traveled_empty
+
+def find_create_minimum_route(start, address_list_size, route_empty, traveled_empty):
+    while len(traveled_empty) < address_list_size:
+        if len(traveled_empty) == 0:
+            next_dest, route_empty, traveled_empty = find_min_distance(start, route_empty, traveled_empty)
+        next_dest, route_empty, traveled_empty = find_min_distance(next_dest, route_empty, traveled_empty)
+        if len(traveled_empty) == address_list_size:
+            traveled_empty.append([edges[next_dest][0],0]) # this line return last index to hub
+            last_distance = traveled_empty[len(traveled_empty)-1][0]
+            route_empty.append([vertices[0][0], calculate_time(last_distance)])
+            vertices[next_dest][1] = 1
 
 def sum_of_route(total_traveled):
     sum = 0
@@ -129,6 +133,8 @@ def calculate_time(distance):
     minutes, seconds = divmod(time_in_seconds, 60)
     hours, minutes = divmod(minutes, 60)
     return "%02d:%02d:%02d" % (hours, minutes, seconds)
+
+
 
 ################################ Program Script Below ################################ transfer to main later
 
@@ -204,6 +210,8 @@ find_create_minimum_route(0, truck_1_address_list_size, route_list_1, total_trav
 reset_del_status()
 # code block saves the sum of truck_1 route, its address route, and distance traveled between each index/address
 truck_1_total_dist = sum_of_route(total_traveled_1)
+truck_1.add_truck_time(route_list_1)
+
 
 # similar to block of code above but the truck object and lists are different
 truck_2.load_truck(package_list_trip_2)
@@ -214,6 +222,8 @@ change_del_status_to_1(vertices, truck_2_address_list)
 find_create_minimum_route(0, truck_2_address_list_size, route_list_2, total_traveled_2)
 reset_del_status()
 truck_2_total_dist = sum_of_route(total_traveled_2)
+truck_2.add_truck_time(route_list_2)
+
 
 # similar to block of code above but the truck object and lists are different
 truck_3.load_truck(package_list_trip_3)
@@ -224,19 +234,20 @@ change_del_status_to_1(vertices, truck_3_address_list)
 find_create_minimum_route(0, truck_3_address_list_size,route_list_3, total_traveled_3)
 reset_del_status()
 truck_3_total_dist = sum_of_route(total_traveled_3)
+truck_3.add_truck_time(route_list_3)
 
 # this is the total distance of all three truck routes
 distance_of_routes = round(truck_1_total_dist + truck_2_total_dist + truck_3_total_dist, 2)
 
 # create a time list
 
-# print(route_list_1,'\n')
-print(total_traveled_1,'\n')
+print(route_list_1,'\n')
+# print(total_traveled_1,'\n')
 # print(truck_1_total_dist,'\n\n')
-# print(route_list_2,'\n')
+print(route_list_2,'\n')
 # print(total_traveled_2,'\n')
 # print(truck_2_total_dist,'\n\n')
-# print(route_list_3,'\n')
+print(route_list_3,'\n')
 # print(total_traveled_3,'\n')
 # print(truck_3_total_dist,'\n')
 
@@ -256,6 +267,5 @@ print(total_traveled_1,'\n')
 #     elif pattern.search(user_input) == None and user_input != 'exit':
 #         print("incorrect format. Please try again")
 
-print(calculate_time(1.6))
 
 # print(time.strptime("08:35:15", "%I:%M:%S"))
