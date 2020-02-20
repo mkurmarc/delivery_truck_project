@@ -1,4 +1,4 @@
-# Marc Rios
+# Marc Rios ID 787989
 import datetime
 import re
 import csv
@@ -177,8 +177,7 @@ def compare_times_and_update_status(user_input):
         if i < len(t3_addresses) and time_user_input < time_t3:
             hash_table.update_val_with_address('delivery_status', t3_addresses[i], 'at hub')
 
-################################ Program Script Below ################################ transfer to main later
-
+################################ Program Script Below ################################
 # creates hash table with 41 buckets to avoid collisions since there are 40 packages
 hash_table = HashTable(41)
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the
