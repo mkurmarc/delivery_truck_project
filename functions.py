@@ -10,7 +10,7 @@ class HashTable:
         self.size = size
         self.hash_table = self.create_buckets()
 
-# Creates the empty buckets
+# Creates the empty buckets. O(n) time complexity
     def create_buckets(self):
         return [[] for _ in range(self.size)]
 
@@ -44,7 +44,8 @@ class HashTable:
         else:
             return "No package found with that key"
 
-# Updates inputed key of dictionary with inputed value using the address to search
+# Updates inputed key of dictionary with inputed value using the address to search.
+# O(n) time complexity
     def update_val_with_address(self, key_to_update, address_to_search, new_val):
         for i in range(1, self.size):
             package_id, package_details = hash_table.get_val(i)
@@ -64,7 +65,7 @@ class Truck:
         self.address_list = []
 
 # These methods load packages from hash map to the truck_cargo of truck object,
-# and loads the addresses to the address_list.
+# and loads the addresses to the address_list. O(n) time complexity
     def load_truck(self, list):
         package_list = list
         for i in range(len(list)):
@@ -73,7 +74,8 @@ class Truck:
             self.address_list.append(package_info['delivery_address'])
 
 # This method adds the truck objects time it leaves from the hub to the time between
-# each delivery address and updates the route_list to time it arrives at the address
+# each delivery address and updates the route_list to time it arrives at the address.
+# O(n) time complexity.
     def add_truck_start_time(self, route_list):
         h, m, s = self.start_time.split(":")
         acc_time_delta = datetime.timedelta(hours=int(h), minutes=int(m),seconds=int(s))
@@ -83,7 +85,8 @@ class Truck:
             acc_time_delta = acc_time_delta + t_delta
             route_list[t][1] = str(acc_time_delta)
 
-# This mthod changes the string representation of time into datetime comparable object
+# This mthod changes the string representation of time into datetime comparable object.
+# O(1) time complexity.
     def truck_tstring_to_time(self):
         t_hr, t_min, t_sec = self.start_time.split(":")
         truck_time = datetime.time(hour=int(t_hr), minute=int(t_min), second=int(t_sec))
@@ -119,19 +122,20 @@ def find_create_minimum_route(start, address_list_size, route_empty, traveled_em
             route_empty.append([vertices[0][0], calculate_time(last_distance)])
             vertices[next_dest][1] = 1
 
-# This function calculates the sum of the passed in route traveled
+# This function calculates the sum of the passed in route traveled. O(n) time complexity.
 def sum_of_route(total_traveled):
     sum = 0
     for i in range(len(total_traveled)):
         sum += total_traveled[i][0]
     return sum
 
-# This function calculates the total of all truck routes traveled
+# This function calculates the total of all truck routes traveled. O(1) time complexity.
 def calc_distance_of_all_routes():
     distance_of_routes = round(truck_1_total_dist + truck_2_total_dist + truck_3_total_dist, 2)
     return distance_of_routes
 
 # Changes the visted/unvisited element of vertices list to only visited aka 1
+# O(n) time complexity
 def change_del_status_to_1(vertices_list, package_address_list):
     for i in range(number_of_vertices):
         if vertices_list[i][0] not in package_address_list:
@@ -139,12 +143,13 @@ def change_del_status_to_1(vertices_list, package_address_list):
     vertices_list[0][1] = 0
 
 # Changes the visted/unvisited element of vertices list to only unvisited aka 0
+# O(n) time complexity
 def reset_del_status():
     for i in range(number_of_vertices):
         vertices[i][1] = 0
 
 # Calculates the time it takes to get somewhere given the distance and speed and
-# returns 00:00:00 format
+# returns 00:00:00 format. O(1) time complexity
 def calculate_time(distance):
     speed = 18
     float_time = distance/speed
@@ -154,7 +159,7 @@ def calculate_time(distance):
     return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
 # Compares the user input time to the combined_route_list to determine which items have
-# been delivered, are in route, or at hub
+# been delivered, are in route, or at hub. O(n^2) time complexity.
 def compare_times_and_update_status(user_input):
     hr, min, sec = user_input.split(":")
     time_user_input = datetime.time(hour=int(hr), minute=int(min), second=int(sec))
@@ -267,14 +272,14 @@ reset_del_status()
 truck_3_total_dist = sum_of_route(total_traveled_3)
 truck_3.add_truck_start_time(route_list_3)
 
-# This is the total distance of all three truck routes
-# please uncomment line below to see total miles traveled for all routes
-# print(calc_distance_of_all_routes())
-
-# To see each individual truck's distance please un comment the three lines below
+# To see each individual truck's distance please uncomment the three lines below
 # print(truck_1_total_dist)
 # print(truck_2_total_dist)
 # print(truck_3_total_dist)
+
+# This is the total distance of all three truck routes
+# please uncomment line below to see total miles traveled for all routes
+# print(calc_distance_of_all_routes())
 
 # This block of code combines all the route_lists into one list called combined_route_list
 combined_route_list = route_list_3.copy()
