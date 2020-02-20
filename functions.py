@@ -1,20 +1,20 @@
-# Marc
+# Marc Rios
 import datetime
 import re
 import csv
 
 class HashTable:
 
-# initializes the object and creates the empty hash table with empty buckets
+# Initializes the object and creates the empty hash table with empty buckets
     def __init__(self, size):
         self.size = size
         self.hash_table = self.create_buckets()
 
-# creates the empty buckets
+# Creates the empty buckets
     def create_buckets(self):
         return [[] for _ in range(self.size)]
 
-# insert and update key, value information with O(1) complexity
+# Insert and update key, value information with O(n) complexity
     def set_val(self, key, value):
         hashed_key = hash(key)%self.size
         bucket = self.hash_table[hashed_key]
@@ -29,7 +29,7 @@ class HashTable:
         else:
             bucket.append([key, value]) # appending stops collisions from happening
 
-# retrieves value from hash table with O(1) complexity
+# Retrieves value from hash table with O(n) complexity
     def get_val(self, key):
         hashed_key = hash(key)%self.size
         bucket = self.hash_table[hashed_key]
@@ -44,6 +44,7 @@ class HashTable:
         else:
             return "No package found with that key"
 
+# Updates inputed key of dictionary with inputed value using the address to search
     def update_val_with_address(self, key_to_update, address_to_search, new_val):
         for i in range(1, self.size):
             package_id, package_details = hash_table.get_val(i)
@@ -57,11 +58,13 @@ class HashTable:
 
 class Truck:
 
+# This initializes the truck object
     def __init__(self, s_time):
         self.start_time = s_time
         self.address_list = []
 
-# These methods load packages from hash map to the truck_cargo of truck object, and loads the addresses to the address_list.
+# These methods load packages from hash map to the truck_cargo of truck object,
+# and loads the addresses to the address_list.
     def load_truck(self, list):
         package_list = list
         for i in range(len(list)):
@@ -69,8 +72,8 @@ class Truck:
             package_info['delivery_status'] = 'in route'
             self.address_list.append(package_info['delivery_address'])
 
-# this method adds the truck objects time it leaves from the hub to the time between each delivery address and
-# updates the route_list to show the accumulated time (time it arrives at address)
+# This method adds the truck objects time it leaves from the hub to the time between
+# each delivery address and updates the route_list to time it arrives at the address
     def add_truck_start_time(self, route_list):
         h, m, s = self.start_time.split(":")
         acc_time_delta = datetime.timedelta(hours=int(h), minutes=int(m),seconds=int(s))
@@ -80,11 +83,19 @@ class Truck:
             acc_time_delta = acc_time_delta + t_delta
             route_list[t][1] = str(acc_time_delta)
 
+# This mthod changes the string representation of time into datetime comparable object
     def truck_tstring_to_time(self):
         t_hr, t_min, t_sec = self.start_time.split(":")
         truck_time = datetime.time(hour=int(t_hr), minute=int(t_min), second=int(t_sec))
         return truck_time
 
+# 1) Select a start point, the hub address
+# 2) Find the nearest unvisited address and go there
+# 3) Mark the current address as visited
+# 4) Are there any unvisited addresses? If yes, go to step 2
+# 5) Return to the starting start, the hub
+# find_min_distance and find_create_minimum_route work together to create the algorithm Nearest Neighbor described in steps above
+# Time-complexity is O(N2log2(N)) iterations, where N is the number of addresses to be visited
 def find_min_distance(start, route_empty, traveled_empty):
     minimum = 1000
     global new_v
@@ -108,26 +119,32 @@ def find_create_minimum_route(start, address_list_size, route_empty, traveled_em
             route_empty.append([vertices[0][0], calculate_time(last_distance)])
             vertices[next_dest][1] = 1
 
+# This function calculates the sum of the passed in route traveled
 def sum_of_route(total_traveled):
     sum = 0
     for i in range(len(total_traveled)):
         sum += total_traveled[i][0]
     return sum
 
+# This function calculates the total of all truck routes traveled
 def calc_distance_of_all_routes():
     distance_of_routes = round(truck_1_total_dist + truck_2_total_dist + truck_3_total_dist, 2)
     return distance_of_routes
 
+# Changes the visted/unvisited element of vertices list to only visited aka 1
 def change_del_status_to_1(vertices_list, package_address_list):
     for i in range(number_of_vertices):
         if vertices_list[i][0] not in package_address_list:
             vertices_list[i][1] = 1
     vertices_list[0][1] = 0
 
+# Changes the visted/unvisited element of vertices list to only unvisited aka 0
 def reset_del_status():
     for i in range(number_of_vertices):
         vertices[i][1] = 0
 
+# Calculates the time it takes to get somewhere given the distance and speed and
+# returns 00:00:00 format
 def calculate_time(distance):
     speed = 18
     float_time = distance/speed
@@ -136,15 +153,13 @@ def calculate_time(distance):
     hours, minutes = divmod(minutes, 60)
     return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
+# Compares the user input time to the combined_route_list to determine which items have
+# been delivered, are in route, or at hub
 def compare_times_and_update_status(user_input):
     hr, min, sec = user_input.split(":")
     time_user_input = datetime.time(hour=int(hr), minute=int(min), second=int(sec))
-    time_t1 = truck_1.truck_tstring_to_time()
-    time_t2 = truck_2.truck_tstring_to_time()
-    time_t3 = truck_3.truck_tstring_to_time()
-    t1_addresses = truck_1.address_list
-    t2_addresses = truck_2.address_list
-    t3_addresses = truck_3.address_list
+    time_t1, time_t2, time_t3 = truck_1.truck_tstring_to_time(), truck_2.truck_tstring_to_time(), truck_3.truck_tstring_to_time()
+    t1_addresses, t2_addresses, t3_addresses = truck_1.address_list, truck_2.address_list, truck_3.address_list
     for i in range(len(combined_route_list)):
         hour, minute, second = combined_route_list[i][1].split(":")
         time_to_compare = datetime.time(hour=int(hour), minute=int(minute), second=int(second))
@@ -161,7 +176,8 @@ def compare_times_and_update_status(user_input):
 
 # creates hash table with 41 buckets to avoid collisions since there are 40 packages
 hash_table = HashTable(41)
-# This reads file line by line and creates a dictionary of packages' info. Then inputs the dictionary into the hash table with set_val method.
+# This reads file line by line and creates a dictionary of packages' info. Then inputs the
+# dictionary into the hash table with set_val method.
 with open("package_file.txt") as f:
     for line in f:
         line = line.strip('\n')
@@ -172,9 +188,11 @@ with open("package_file.txt") as f:
                  'package_weight':weight, 'special_note':special_note, 'delivery_status':delivery_status}
         hash_table.set_val(int(package_key), value)
 
-# creates empty map matrix to be use for distances between addresses
+# Creates empty list that will be filled with other lists to create an adjacency matrix
+# to be use for distances between addresses
 edges = []
-# this block of code reads in the csv file of distances and appends to edges to create a matrix
+# This block of code reads in the csv file of distances and appends to edges to
+#create the matrix
 with open('wgups_distance_table_headers.csv', 'r') as csv_dist_file:
     csv_reader = csv.reader(csv_dist_file)
     vertices = next(csv_reader)
@@ -182,44 +200,48 @@ with open('wgups_distance_table_headers.csv', 'r') as csv_dist_file:
         line = list(map(float, line))
         edges.append(line)
 
-# used list comprehension to make a list of lists with vertices/addresses and 0 in each list. 0 means not visited.
+# Used list comprehension to make a list of lists with vertices/addresses and 0 in each list.
+# 0 means not visited.
 vertices = [[index,0] for index in vertices]
-# stores number of vertices in the vertices
+# Stores number of vertices in the vertices
 number_of_vertices = len(vertices)
 
 # three empty lists for delivery address and time delivered
 route_list_1 = []
 route_list_2 = []
 route_list_3 = []
-# three empty lists for distance traveled between points and index on edges matrix index traveled to for each truck
+# three empty list for each truck. Each that will hold a list of 2 elements.
+# Distance traveled, index on edges matrix
 total_traveled_1 = []
 total_traveled_2 = []
 total_traveled_3 = []
 
-# lists of package IDs for each trip and truck according to the special notes. All special criteria has been met and verified.
+# lists of package IDs for each trip and truck according to the special notes. All
+# special criteria has been met and verified.
 package_list_trip_1 = [13, 14, 15, 16, 19, 20, 1, 29, 30, 34, 40, 7, 8, 4, 39, 21]
 package_list_trip_2 = [31, 32, 37, 38, 5, 3, 18, 36, 6, 25, 26, 28, 2, 33, 27, 35]
 package_list_trip_3 = [9, 10, 11, 12, 17, 22, 23, 24]
 
-# creates truck objects
+# Creates 3 truck objects
 truck_1 = Truck('08:00:00')
 truck_2 = Truck('09:05:00')
 truck_3 = Truck('10:20:00')
 
-# truck 1 is loaded with the packages. Packages now in truck_cargo
+# Truck 1 is loaded with the packages. Packages now in truck_cargo
 truck_1.load_truck(package_list_trip_1)
-# these two lines of code remove duplicate addresses from the truck_1 address list
+# These two lines of code remove duplicate addresses from the truck_1 address list
 truck_1_address_list = truck_1.address_list
 truck_1_address_list = list(set(truck_1_address_list))
-# saves size of non-duplicate list
+# Saves size of non-duplicate list
 truck_1_address_list_size = len(truck_1_address_list)
-# below this changes vertices that are not in the truck_1_address_list to visited aka 1
+# Below this changes vertices that are not in the truck_1_address_list to visited aka 1
 change_del_status_to_1(vertices, truck_1_address_list)
-# below this finds the minimum distance route using Nearest Neighbor technique
+# Below this finds the minimum distance route using Nearest Neighbor technique
 find_create_minimum_route(0, truck_1_address_list_size, route_list_1, total_traveled_1)
-# below this resets all vertices to unvisited aka 0
+# Below this resets all vertices to unvisited aka 0
 reset_del_status()
-# code block saves the sum of truck_1 route, its address route, and distance traveled between each index/address
+# Code block saves the sum of truck_1 route, its address route, and distance
+# traveled between each index/address
 truck_1_total_dist = sum_of_route(total_traveled_1)
 truck_1.add_truck_start_time(route_list_1)
 
@@ -245,11 +267,16 @@ reset_del_status()
 truck_3_total_dist = sum_of_route(total_traveled_3)
 truck_3.add_truck_start_time(route_list_3)
 
-# this is the total distance of all three truck routes
+# This is the total distance of all three truck routes
 # please uncomment line below to see total miles traveled for all routes
 # print(calc_distance_of_all_routes())
 
-# this block of code combines all the route_lists into one list called combined_route_list
+# To see each individual truck's distance please un comment the three lines below
+# print(truck_1_total_dist)
+# print(truck_2_total_dist)
+# print(truck_3_total_dist)
+
+# This block of code combines all the route_lists into one list called combined_route_list
 combined_route_list = route_list_3.copy()
 combined_route_list.extend(route_list_2)
 combined_route_list.extend(route_list_1)
@@ -265,4 +292,4 @@ To exit the application, please enter 'exit'")
         compare_times_and_update_status(user_input)
         print(hash_table, "\n\n")
     elif pattern.search(user_input) == None and user_input != 'exit':
-        print("incorrect format. Please try again")
+        print("Incorrect format. Please try again")
