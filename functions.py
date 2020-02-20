@@ -182,7 +182,7 @@ def compare_times_and_update_status(user_input):
 # creates hash table with 41 buckets to avoid collisions since there are 40 packages
 hash_table = HashTable(41)
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the
-# dictionary into the hash table with set_val method.
+# dictionary into the hash table with set_val method. O(n) time complexity
 with open("package_file.txt") as f:
     for line in f:
         line = line.strip('\n')
@@ -197,7 +197,8 @@ with open("package_file.txt") as f:
 # to be use for distances between addresses
 edges = []
 # This block of code reads in the csv file of distances and appends to edges to
-#create the matrix
+# create the matrix. Also, it creates list of addresses under vertices list.
+# O(n) time complexity
 with open('wgups_distance_table_headers.csv', 'r') as csv_dist_file:
     csv_reader = csv.reader(csv_dist_file)
     vertices = next(csv_reader)
@@ -211,11 +212,11 @@ vertices = [[index,0] for index in vertices]
 # Stores number of vertices in the vertices
 number_of_vertices = len(vertices)
 
-# three empty lists for delivery address and time delivered
+# Three empty lists for delivery address and time delivered
 route_list_1 = []
 route_list_2 = []
 route_list_3 = []
-# three empty list for each truck. Each that will hold a list of 2 elements.
+# Three empty list for each truck. Each that will hold a list of 2 elements.
 # Distance traveled, index on edges matrix
 total_traveled_1 = []
 total_traveled_2 = []
@@ -286,7 +287,7 @@ combined_route_list = route_list_3.copy()
 combined_route_list.extend(route_list_2)
 combined_route_list.extend(route_list_1)
 
-# Block of code create user menu to intereact with the program
+# Block of code creates simple user interface to intereact with the program
 user_input = ""
 while user_input != 'exit':
     print("To see the delivery status of packages at any given time, please enter the time in HH:MM:SS format. \
