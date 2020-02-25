@@ -179,7 +179,7 @@ def compare_times_and_update_status(user_input):
 
 ################################ Program Script Below ################################
 # creates hash table with 41 buckets to avoid collisions since there are 40 packages
-hash_table = HashTable(41)
+hash_table = HashTable(40)
 # This reads file line by line and creates a dictionary of packages' info. Then inputs the
 # dictionary into the hash table with set_val method. O(n) time complexity
 with open("package_file.txt") as f:
@@ -272,15 +272,6 @@ reset_del_status()
 truck_3_total_dist = sum_of_route(total_traveled_3)
 truck_3.add_truck_start_time(route_list_3)
 
-# To see each individual truck's distance please uncomment the three lines below
-# print(truck_1_total_dist)
-# print(truck_2_total_dist)
-# print(truck_3_total_dist)
-
-# This is the total distance of all three truck routes
-# please uncomment line below to see total miles traveled for all routes
-# print(calc_distance_of_all_routes())
-
 # This block of code combines all the route_lists into one list called combined_route_list
 combined_route_list = route_list_3.copy()
 combined_route_list.extend(route_list_2)
@@ -289,12 +280,18 @@ combined_route_list.extend(route_list_1)
 # Block of code creates simple user interface to intereact with the program
 user_input = ""
 while user_input != 'exit':
-    print("To see the delivery status of packages at any given time, please enter the time in HH:MM:SS format. \
-To exit the application, please enter 'exit'")
+    print("To see the delivery status of all packages at any given time, please enter the time you want to see in HH:MM:SS format. \
+To see the miles traveled for each individual truck route, enter 'truck miles' please. \
+To view the total miles traveled for all truck routes, enter 'total miles' please. To exit the application, please enter 'exit'")
     pattern = re.compile(r'\d\d:\d\d:\d\d')
-    user_input = input("Please enter a time in HH:MM:SS format to see status of all packages: ")
+    user_input = input("\nPlease enter a time in HH:MM:SS format to see status of all packages: ")
     if pattern.search(user_input):
         compare_times_and_update_status(user_input)
         print(hash_table, "\n\n")
-    elif pattern.search(user_input) == None and user_input != 'exit':
-        print("Incorrect format. Please try again")
+    if user_input == 'truck miles':
+        print(f"\nTruck 1 traveled {truck_1_total_dist} miles\nTruck 2 traveled {truck_2_total_dist} miles\nTruck 3 traveled {truck_3_total_dist} miles\n")
+    if user_input == 'total miles':
+        print(f"\nAll the trucks traveled a total of {calc_distance_of_all_routes()} miles.\n")
+    elif pattern.search(user_input) == None and user_input != 'exit' and user_input != 'truck miles' and \
+    user_input != 'total miles':
+        print("\nIncorrect format. Please try again\n")
